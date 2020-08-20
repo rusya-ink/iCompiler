@@ -1,0 +1,12 @@
+/Users/gneyhabub/Documents/GitHub/iCompiler/bin/Debug/netcoreapp3.1/iCompiler.deps.json
+/Users/gneyhabub/Documents/GitHub/iCompiler/bin/Debug/netcoreapp3.1/iCompiler.runtimeconfig.json
+/Users/gneyhabub/Documents/GitHub/iCompiler/bin/Debug/netcoreapp3.1/iCompiler.runtimeconfig.dev.json
+/Users/gneyhabub/Documents/GitHub/iCompiler/bin/Debug/netcoreapp3.1/iCompiler.dll
+/Users/gneyhabub/Documents/GitHub/iCompiler/bin/Debug/netcoreapp3.1/iCompiler.pdb
+/Users/gneyhabub/Documents/GitHub/iCompiler/obj/Debug/netcoreapp3.1/iCompiler.csprojAssemblyReference.cache
+/Users/gneyhabub/Documents/GitHub/iCompiler/obj/Debug/netcoreapp3.1/iCompiler.AssemblyInfoInputs.cache
+/Users/gneyhabub/Documents/GitHub/iCompiler/obj/Debug/netcoreapp3.1/iCompiler.AssemblyInfo.cs
+/Users/gneyhabub/Documents/GitHub/iCompiler/obj/Debug/netcoreapp3.1/iCompiler.csproj.CoreCompileInputs.cache
+/Users/gneyhabub/Documents/GitHub/iCompiler/obj/Debug/netcoreapp3.1/iCompiler.dll
+/Users/gneyhabub/Documents/GitHub/iCompiler/obj/Debug/netcoreapp3.1/iCompiler.pdb
+/Users/gneyhabub/Documents/GitHub/iCompiler/obj/Debug/netcoreapp3.1/iCompiler.genruntimeconfig.cache
