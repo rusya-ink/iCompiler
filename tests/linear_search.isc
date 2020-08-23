@@ -1,11 +1,13 @@
-routine main() is
+routine main() : integer is
     type ten_int_arr is array[10] integer;
     var myArray : ten_int_arr;
 
     for i in 1 .. 10 loop
         myArray[i] := i;
     
-    var ans is linear_search_ten_int(myArray, 5)
+    var ans is linear_search_ten_int(myArray, 5);
+    
+    return 0;
 end
 
 routine linear_search_ten_int(arr : ten_int_arr, el : integer) : integer is

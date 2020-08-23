@@ -1,0 +1,6 @@
+routine main() : integer is
+    var ans : boolean;
+    ans := ((5 > 3) xor (5 < 3)) and (true or 0);
+
+    return 0;
+end
