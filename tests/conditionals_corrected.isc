@@ -1,0 +1,11 @@
+routine main(a : integer , b : integer) : integer is
+	if a = b then
+		return 0
+	else
+		if a > b then
+			return 1
+		else
+			return - 1
+		end
+	end
+end

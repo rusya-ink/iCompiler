@@ -1,0 +1,14 @@
+type ex_type is record
+	var in_type_var : record
+		var b is true
+	end
+	var integer5 : integer is 5
+	var r : real
+end
+
+routine main() : boolean is
+	var record1 is ex_type
+	record1.in_type_var.b = false
+	record1.integer5 = 3
+	return record1.in_type_var.b
+end

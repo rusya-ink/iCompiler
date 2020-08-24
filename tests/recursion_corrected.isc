@@ -1,0 +1,11 @@
+routine pow2 (n : integer) : integer
+	if n > 0 then
+		return 2 * pow2( n - 1 )
+	else
+		return 1
+	end
+end
+
+main (n : integer) : integer
+	return pow2 ( n )
+end
