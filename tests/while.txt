@@ -1,0 +1,4 @@
+routine main(a : integer , b : integer) : integer is
+	while a > b loop (a - 2) end
+	return 0
+end
