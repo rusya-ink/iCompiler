@@ -1,0 +1,20 @@
+routine main() is
+  var my_array: array [25] integer;
+  var temp: integer;
+
+  for i in 1..25 loop
+    my_array[i] := i;
+  end
+
+  for i in 1..25 loop
+    temp := my_array[i];
+    my_array[i] := my_array[25 - i];
+    my_array[25 - i] := temp;
+  end
+
+  for i in 1..25 loop
+    print(my_array[i]);
+  end
+
+  return 0;
+end

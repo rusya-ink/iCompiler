@@ -1,0 +1,11 @@
+routine power(n: integer, k: integer): integer is
+  if k < 0 then
+    return -1;
+  end
+
+  var result is 1;
+  for i in 1..k loop
+    result := result * n;
+  end
+  return result;
+end
