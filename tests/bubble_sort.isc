@@ -12,7 +12,7 @@ routine bubble_sort(this_array: array [] integer) is
   end
 end
 
-routine main() is ~~
+routine main() is
   var my_array: array [5] integer;
   my_array[1] = 4;
   my_array[2] = 1;
