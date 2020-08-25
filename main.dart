@@ -23,7 +23,7 @@ Future<List<Token>> lexer(path) async {
   var previousMatch = null;
 
   for (var match in matches) {
-    if (previousMatch != null) {
+    if (previousMatch != null && previousMatch.end != match.start) {
       tokens.add(new Token(
         fileContents.substring(previousMatch.end, match.start),
         previousMatch.end,
