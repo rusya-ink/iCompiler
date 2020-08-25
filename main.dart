@@ -8,7 +8,7 @@ class Token {
   int type = null;
   bool isFaulty;
 
-  Token(this.value, this.start, this.end, { this.isFaulty }) {}
+  Token(this.value, this.start, this.end, {this.isFaulty}) {}
 }
 
 RegExp langTokenPtn = new RegExp(
@@ -48,6 +48,7 @@ Future<List<Token>> lexer(path) async {
 void main() async {
   List<Token> tokensList = await lexer('./tests/bubble_sort.isc');
   tokensList.forEach((element) {
-    print('Token "${element.value}", ${element.start}–${element.end}');
+    print(
+        'Token "${element.value == '\n' ? '\\n' : element.value}", ${element.start}–${element.end}');
   });
 }
