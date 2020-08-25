@@ -8,65 +8,46 @@ class Token {
   int type = null;
   bool isFaulty;
 
-  Token(String value, int start, int end, bool isFaulty) {
-    this.value = value;
-    this.start = start;
-    this.end = end;
-    this.isFaulty = isFaulty;
-  }
+  Token(this.value, this.start, this.end, { this.isFaulty }) {}
 }
 
-void main() {
-  List<Token> lexer(path) {
-    String fileString;
-    var tokens = [];
-    new File(path).readAsString().then((String contents) {
-      fileString = contents;
-      RegExp exp = new RegExp(
-          "([a-zA-Z_]\\w*|[0-9.]|[:;(),\\[\\]=.<>\/*%+\n-])",
-          multiLine: true);
-      var matches = exp.allMatches(fileString).toList();
+RegExp langTokenPtn = new RegExp(
+  "([a-zA-Z_]\\w*|[0-9.]|[:;(),\\[\\]=.<>\/*%+\n-])",
+  multiLine: true,
+);
 
-      for (var i = 0; i < matches.length; i++) {
-        if (i > 0) {
-          //Get tokens "in between"
-          if (matches[i].start - matches[i - 1].end > 0) {
-            tokens.add(new Token(
-                fileString.substring(matches[i - 1].end, matches[i].start),
-                matches[i].start,
-                matches[i - 1].end,
-                true));
-          }
-        }
-        //Get correct Tokens
-        tokens.add(new Token(
-            fileString.substring(matches[i].start, matches[i].end),
-            matches[i].start,
-            matches[i].end,
-            false));
-      }
-      /** Function that says if the given string has any character distinct from the whitespace */
-      bool containsOnlySpaces(String str) {
-        var arr = str.codeUnits;
-        for (var i = 0; i < arr.length; i++) {
-          if (arr[i] != 32) {
-            return false;
-          }
-        }
-        return true;
-      }
+Future<List<Token>> lexer(path) async {
+  var tokens = <Token>[];
+  var fileContents = await new File(path).readAsString();
+  var matches = langTokenPtn.allMatches(fileContents);
+  var previousMatch = null;
 
-      for (var i = 0; i < tokens.length; i++) {
-        // Remove spaces from token list
-        if (tokens[i].isFaulty && containsOnlySpaces(tokens[i].value))
-          tokens.removeAt(i);
-      }
-      return tokens;
-    });
+  for (var match in matches) {
+    if (previousMatch != null) {
+      tokens.add(new Token(
+        fileContents.substring(previousMatch.end, match.start),
+        previousMatch.end,
+        match.start,
+        isFaulty: true,
+      ));
+    }
+
+    tokens.add(new Token(
+      match.group(1),
+      match.start,
+      match.end,
+      isFaulty: false,
+    ));
+
+    previousMatch = match;
   }
 
-  List<Token> tokensList = lexer('./tests/bubble_sort.isc');
+  return tokens;
+}
+
+void main() async {
+  List<Token> tokensList = await lexer('./tests/bubble_sort.isc');
   tokensList.forEach((element) {
-    print(element.value);
+    print('Token "${element.value}", ${element.start}–${element.end}');
   });
 }
