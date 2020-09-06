@@ -7,6 +7,4 @@ import 'expression.dart';
 class AndOperator extends BinaryRelation {
   AndOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
-
-  // TODO: implement .parse()
 }

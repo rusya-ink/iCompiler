@@ -7,6 +7,4 @@ import 'expression.dart';
 class XorOperator extends BinaryRelation {
   XorOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
-
-  // TODO: implement .parse()
 }

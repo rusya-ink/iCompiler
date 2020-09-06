@@ -7,6 +7,4 @@ import 'expression.dart';
 /// Casts the operand to a numeric type and returns a numeric value.
 class NegOperator extends UnaryRelation implements Primary {
   NegOperator(Expression operand) : super(operand);
-
-  // TODO: implement .parse()
 }

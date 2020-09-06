@@ -5,8 +5,6 @@ import '../print-utils.dart';
 class IntegerType implements VarType {
   IntegerType();
 
-  // TODO: implement .parse()
-
   String toString({int depth = 0, String prefix = ''}) {
     return drawDepth('${prefix}IntegerType', depth);
   }

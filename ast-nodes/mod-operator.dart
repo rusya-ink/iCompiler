@@ -8,6 +8,4 @@ import 'expression.dart';
 class ModOperator extends BinaryRelation implements Product {
   ModOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
-
-  // TODO: implement .parse()
 }

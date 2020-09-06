@@ -15,7 +15,7 @@ class VariableDeclaration extends Declaration {
 
   factory VariableDeclaration.parse(Iterable<Token> tokens) {
     // TODO: write the actual parser body
-    return VariableDeclaration('dummy', null, null);
+    return VariableDeclaration('dummy', null, Expression.parse(tokens));
   }
 
   String toString({int depth = 0, String prefix = ''}) {
