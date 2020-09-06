@@ -8,6 +8,4 @@ import 'expression.dart';
 class LessOperator extends BinaryRelation implements Comparison {
   LessOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
-
-  // TODO: implement .parse()
 }

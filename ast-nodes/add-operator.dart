@@ -8,6 +8,4 @@ import 'expression.dart';
 class AddOperator extends BinaryRelation implements Sum {
   AddOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
-
-  // TODO: implement .parse()
 }

@@ -8,6 +8,4 @@ import 'expression.dart';
 class EqOperator extends BinaryRelation implements Comparison {
   EqOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
-
-  // TODO: implement .parse()
 }

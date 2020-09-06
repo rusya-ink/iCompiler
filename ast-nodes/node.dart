@@ -7,4 +7,6 @@ abstract class Node {
   ///
   /// Expected to throw [SyntaxError] on failure.
   Node.parse(Iterable<Token> tokens);
+
+  String toString({int depth = 0, String prefix = ''});
 }

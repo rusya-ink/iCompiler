@@ -1,5 +1,6 @@
 import 'modifiable-primary.dart';
 import 'expression.dart';
+import '../print-utils.dart';
 
 /// An array element access by [index] – for either reading or writing.
 ///
@@ -21,4 +22,12 @@ class IndexAccess implements ModifiablePrimary {
   IndexAccess(this.index, this.object);
 
   // TODO: implement .parse()
+
+  String toString({int depth = 0, String prefix = ''}) {
+    return (
+      drawDepth('${prefix}IndexAccess', depth)
+      + (this.index?.toString(depth: depth + 1, prefix: 'index: ') ?? '')
+      + (this.object?.toString(depth: depth + 1, prefix: 'object: ') ?? '')
+    );
+  }
 }

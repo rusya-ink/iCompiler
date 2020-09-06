@@ -5,7 +5,7 @@ import 'type-declaration.dart';
 import 'routine-declaration.dart';
 import '../lexer.dart';
 import '../iterator-utils.dart';
-import '../syntax-error.dart';
+import '../print-utils.dart';
 
 /// A program is a list of [Declaration]s.
 ///
@@ -23,22 +23,22 @@ class Program implements Node {
     var declarations = <Declaration>[];
 
     while (iterator.moveNext()) {
-      var declaration = consumeUntil(iterator, RegExp("^[\n;]\$"));
-      if (declaration.isEmpty) {
+      var declarationTokens = consumeUntil(iterator, RegExp("^[\n;]\$"));
+      if (declarationTokens.isEmpty) {
         continue;
       }
 
-      if (declaration[0].value == 'var') {
-        declarations.add(VariableDeclaration.parse(declaration));
-      } else if (declaration[0].value == 'type') {
-        declarations.add(TypeDeclaration.parse(declaration));
-      } else if (declaration[0].value == 'routine') {
-        declarations.add(RoutineDeclaration.parse(declaration));
-      } else {
-        throw SyntaxError(declaration[0], "Expected declaration, found ${declaration[0]}");
-      }
+      declarations.add(Declaration.parse(declarationTokens));
     }
 
     return Program(declarations);
+  }
+
+  String toString({int depth = 0, String prefix = ''}) {
+    return (
+      drawDepth('${prefix}Program', depth)
+      + drawDepth('declarations:', depth + 1)
+      + this.declarations.map((node) => node?.toString(depth: depth + 2) ?? '').join('')
+    );
   }
 }

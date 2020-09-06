@@ -1,4 +1,5 @@
 import 'modifiable-primary.dart';
+import '../print-utils.dart';
 
 /// A variable reference by [name] – for either reading or writing.
 class Variable implements ModifiablePrimary {
@@ -6,5 +7,7 @@ class Variable implements ModifiablePrimary {
 
   Variable(this.name);
 
-  // TODO: implement .parse()
+  String toString({int depth = 0, String prefix = ''}) {
+    return drawDepth('${prefix}Variable("${this.name}")', depth);
+  }
 }

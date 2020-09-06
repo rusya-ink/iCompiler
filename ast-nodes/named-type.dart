@@ -1,5 +1,6 @@
 import 'var-type.dart';
 import 'type-declaration.dart';
+import '../print-utils.dart';
 
 /// A type that was specified by the [name].
 ///
@@ -9,5 +10,7 @@ class NamedType implements VarType {
 
   NamedType(this.name);
 
-  // TODO: implement .parse()
+  String toString({int depth = 0, String prefix = ''}) {
+    return drawDepth('${prefix}NamedType("${this.name}")', depth);
+  }
 }
