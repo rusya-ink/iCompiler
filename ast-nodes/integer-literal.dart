@@ -1,4 +1,5 @@
 import 'primary.dart';
+import '../print-utils.dart';
 
 /// A literal integer number in code.
 class IntegerLiteral implements Primary {
@@ -7,4 +8,8 @@ class IntegerLiteral implements Primary {
   IntegerLiteral(this.value);
 
   // TODO: implement .parse()
+
+  String toString({int depth = 0, String prefix = ''}) {
+    return drawDepth('${prefix}IntegerLiteral(${this.value})', depth);
+  }
 }

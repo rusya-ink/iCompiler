@@ -1,4 +1,5 @@
 import 'primary.dart';
+import '../print-utils.dart';
 
 /// A literal floating-point number in code.
 class RealLiteral implements Primary {
@@ -7,4 +8,8 @@ class RealLiteral implements Primary {
   RealLiteral(this.value);
 
   // TODO: implement .parse()
+
+  String toString({int depth = 0, String prefix = ''}) {
+    return drawDepth('${prefix}RealLiteral(${this.value})', depth);
+  }
 }

@@ -5,6 +5,7 @@ import 'type-declaration.dart';
 import 'routine-declaration.dart';
 import '../lexer.dart';
 import '../iterator-utils.dart';
+import '../print-utils.dart';
 import '../syntax-error.dart';
 
 /// A program is a list of [Declaration]s.
@@ -40,5 +41,13 @@ class Program implements Node {
     }
 
     return Program(declarations);
+  }
+
+  String toString({int depth = 0, String prefix = ''}) {
+    return (
+      drawDepth('${prefix}Program', depth)
+      + drawDepth('declarations:', depth + 1)
+      + this.declarations.map((node) => node?.toString(depth: depth + 2) ?? '').join('')
+    );
   }
 }

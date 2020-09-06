@@ -1,4 +1,5 @@
 import 'modifiable-primary.dart';
+import '../print-utils.dart';
 
 /// A record field access by [name] – for either reading or writing.
 ///
@@ -14,4 +15,11 @@ class FieldAccess implements ModifiablePrimary {
   FieldAccess(this.name, this.object);
 
   // TODO: implement .parse()
+
+  String toString({int depth = 0, String prefix = ''}) {
+    return (
+      drawDepth('${prefix}FieldAccess("${this.name}")', depth)
+      + (this.object?.toString(depth: depth + 1, prefix: 'object: ') ?? '')
+    );
+  }
 }
