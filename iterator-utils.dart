@@ -23,7 +23,8 @@ List<Token> consumeFull(Iterator<Token> iterator) {
   } while (iterator.moveNext());
 
   return tokens;
-  
+}
+
 /// Check that the next token in the [iterator] matches the [expected] regex.
 ///
 /// Throws a syntax error with a given [errorMessage] if the check fails.
