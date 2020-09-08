@@ -14,3 +14,12 @@ List<Token> consumeUntil(Iterator<Token> iterator, RegExp terminal) {
 
   return tokens;
 }
+
+List<Token> consumeFull(Iterator<Token> iterator) {
+  var tokens = <Token>[];
+  do {
+    tokens.add(iterator.current);
+  } while (iterator.moveNext());
+
+  return tokens;
+}

@@ -1,3 +1,5 @@
+import '../iterator-utils.dart';
+import '../syntax-error.dart';
 import 'declaration.dart';
 import 'var-type.dart';
 import 'expression.dart';
@@ -14,15 +16,32 @@ class VariableDeclaration extends Declaration {
   VariableDeclaration(name, this.type, this.value) : super(name);
 
   factory VariableDeclaration.parse(Iterable<Token> tokens) {
-    // TODO: write the actual parser body
-    return VariableDeclaration('dummy', null, Expression.parse(tokens));
+    var iter = tokens.iterator;
+    var temp_name;
+    iter.moveNext(); // Skip the `var` keyword
+    if (iter.moveNext() &&
+        iter?.current?.value != ':' &&
+        iter?.current?.value != 'is')
+      temp_name = iter.current.value;
+    else
+      throw SyntaxError(null, 'Expected a name of the variable');
+    if (!iter.moveNext())
+      throw SyntaxError(null, 'Type is required');
+    else if (iter.current.value == ':') {
+      iter.moveNext();
+      return VariableDeclaration(
+          temp_name, VarType.parse(consumeFull(iter)), null);
+    } else if (iter.current.value == 'is') {
+      iter.moveNext();
+      return VariableDeclaration(
+          temp_name, null, Expression.parse(consumeFull(iter)));
+    } else
+      throw SyntaxError(iter.current, 'Expected ":" or "is"');
   }
 
   String toString({int depth = 0, String prefix = ''}) {
-    return (
-      drawDepth('${prefix}VariableDeclaration("${this.name}")', depth)
-      + (this.type?.toString(depth: depth + 1, prefix: 'type: ') ?? '')
-      + (this.value?.toString(depth: depth + 1, prefix: 'value: ') ?? '')
-    );
+    return (drawDepth('${prefix}VariableDeclaration("${this.name}")', depth) +
+        (this.type?.toString(depth: depth + 1, prefix: 'type: ') ?? '') +
+        (this.value?.toString(depth: depth + 1, prefix: 'value: ') ?? ''));
   }
 }
