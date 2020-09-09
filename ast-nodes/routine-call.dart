@@ -13,26 +13,26 @@ class RoutineCall implements Primary {
   RoutineCall(this.name, this.arguments);
 
   factory RoutineCall.parse(Iterable<Token> tokens) {
-    final tempName = tokens.first.value;
     final iter = tokens.iterator;
-    iter.moveNext(); // Skip the identifier
-    iter.moveNext(); // The opening bracket will always be there, cause it triggers this function to be run
+    checkNext(iter, RegExp('[a-zA-Z_]\w*\$'), "Expected identifier");
+    final tempName = iter.current.value;
+    checkNext(iter, RegExp('^[(]\$'), 'Expected "("');
     var exprs = [];
     var argExpected =
         false; // Flag that is set after encountering a comma (to detect cases like func(arg, ))
-    if (!iter.moveNext()) throw SyntaxError(tokens.first, 'Expected ")"');
-    do {
-      final tokenBuff = consumeUntil(iter, RegExp("^[,)]\$"));
-      if (tokenBuff.isEmpty && argExpected)
-        throw SyntaxError(iter.current, 'Expected an argument');
-      else if (!tokenBuff.isEmpty) exprs.add(Expression.parse(tokenBuff));
-      if (iter?.current?.value == ')')
-        return RoutineCall(tempName, exprs.isEmpty ? null : exprs);
-      else if (iter?.current?.value == ',')
-        argExpected = true;
-      else
-        throw SyntaxError(iter.current, 'Expected ")"');
-    } while (iter.moveNext());
+    exprs = consumeStackUntil(iter, RegExp('^[(]\$'), RegExp('^[)]\$'));
+    checkNext(iter, RegExp('^[)]\$'), 'Expected ")"');
+    final exprIter = exprs.iterator;
+    while (exprIter.moveNext()) {
+      final tokenBuff = consumeUntil(iter, RegExp("^[,]\$"));
+      if (tokenBuff.isEmpty && exprIter.moveNext() ||
+          tokenBuff.isEmpty && argExpected) {
+        throw SyntaxError(exprIter.current, 'Expected an argument');
+      } else if (!tokenBuff.isEmpty) {
+        exprs.add(Expression.parse(tokenBuff));
+      }
+    }
+    return RoutineCall(tempName, exprs.isEmpty ? null : exprs);
   }
 
   String toString({int depth = 0, String prefix = ''}) {

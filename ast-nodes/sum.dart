@@ -11,19 +11,41 @@ abstract class Sum implements Comparison {
   factory Sum.parse(Iterable<Token> tokens) {
     final iter = tokens.iterator;
     iter.moveNext();
+    List<Token> product1;
+    // Check if our sum starts with a sign
+    if (['+', '-'].contains(iter.current.value)) {
+      product1.add(iter.current);
+      iter.moveNext();
+    }
     final productBuffer = consumeUntil(iter, RegExp('^[+-]\$'));
-    if (productBuffer.isEmpty)
-      throw SyntaxError(tokens.first, 'Expected A Product');
-    if (iter?.current?.value == '+') {
+    if (productBuffer.isEmpty) {
+      throw SyntaxError(tokens.first, 'Summond is expected');
+    }
+    product1 = product1..addAll(productBuffer);
+    if (iter.current?.value == '+') {
       iter.moveNext();
-      return AddOperator(
-          Product.parse(productBuffer), Sum.parse(consumeFull(iter)));
-    } else if (iter?.current?.value == '-') {
+      if (iter.current?.value == '-') {
+        // If the second summond is negative, simplify to substracrtion
+        iter.moveNext();
+        return SubOperator(
+            Product.parse(product1), Sum.parse(consumeFull(iter)));
+      } else if (iter.current?.value == '+') {
+        iter.moveNext();
+      }
+      return AddOperator(Product.parse(product1), Sum.parse(consumeFull(iter)));
+    } else if (iter.current?.value == '-') {
       iter.moveNext();
-      return SubOperator(
-          Product.parse(productBuffer), Sum.parse(consumeFull(iter)));
+      if (iter.current?.value == '-') {
+        // If the second summond is negative, simplify to addition
+        iter.moveNext();
+        return AddOperator(
+            Product.parse(product1), Sum.parse(consumeFull(iter)));
+      } else if (iter.current?.value == '+') {
+        iter.moveNext();
+      }
+      return SubOperator(Product.parse(product1), Sum.parse(consumeFull(iter)));
     } else {
-      return Product.parse(productBuffer);
+      return Product.parse(product1);
     }
   }
 }

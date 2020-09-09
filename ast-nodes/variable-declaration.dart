@@ -16,25 +16,30 @@ class VariableDeclaration extends Declaration {
   VariableDeclaration(name, this.type, this.value) : super(name);
 
   factory VariableDeclaration.parse(Iterable<Token> tokens) {
-    var iter = tokens.iterator;
-    var temp_name;
-    iter.moveNext(); // Skip the `var` keyword
+    final iter = tokens.iterator;
+    var tempName;
+    checkNext(iter, RegExp('var\$'), 'Expected "var"');
     if (iter.moveNext() &&
-        iter?.current?.value != ':' &&
-        iter?.current?.value != 'is')
-      temp_name = iter.current.value;
+        iter.current?.value != ':' &&
+        iter.current?.value != 'is')
+      tempName = iter.current.value;
     else
       throw SyntaxError(null, 'Expected a name of the variable');
     if (!iter.moveNext())
       throw SyntaxError(null, 'Type is required');
     else if (iter.current.value == ':') {
       iter.moveNext();
-      return VariableDeclaration(
-          temp_name, VarType.parse(consumeFull(iter)), null);
+      final typeBuffer = consumeUntil(iter, RegExp('is\$'));
+      if (iter.current?.value == 'is') {
+        return VariableDeclaration(tempName, VarType.parse(typeBuffer),
+            Expression.parse(consumeFull(iter)));
+      } else {
+        return VariableDeclaration(tempName, VarType.parse(typeBuffer), null);
+      }
     } else if (iter.current.value == 'is') {
       iter.moveNext();
       return VariableDeclaration(
-          temp_name, null, Expression.parse(consumeFull(iter)));
+          tempName, null, Expression.parse(consumeFull(iter)));
     } else
       throw SyntaxError(iter.current, 'Expected ":" or "is"');
   }

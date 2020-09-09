@@ -1,6 +1,8 @@
 import '../syntax-error.dart';
 import 'node.dart';
 import '../lexer.dart';
+import 'type-declaration.dart';
+import 'variable-declaration.dart';
 import 'while-loop.dart';
 import 'for-loop.dart';
 import 'if-statement.dart';
@@ -11,26 +13,28 @@ import 'assignment.dart';
 abstract class Statement implements Node {
   factory Statement.parse(Iterable<Token> tokens) {
     if (tokens.isEmpty) {
-      throw SyntaxError(tokens?.first, 'Expected a statement');
+      throw SyntaxError(tokens.first, 'Expected a statement');
     }
-
-    if (tokens.first.value == 'while')
-      return WhileLoop.parse(tokens);
-    else if (tokens.first.value == 'for')
-      return ForLoop.parse(tokens);
-    else if (tokens.first.value == 'if') return IfStatement.parse(tokens);
     var iter = tokens.iterator;
     iter.moveNext();
-    if (iter.current.value == '(')
+    if (iter.current.value == 'while') {
+      return WhileLoop.parse(tokens);
+    } else if (iter.current.value == 'for') {
+      return ForLoop.parse(tokens);
+    } else if (iter.current.value == 'if') {
+      return IfStatement.parse(tokens);
+    } else if (iter.current.value == 'var') {
+      return VariableDeclaration.parse(tokens);
+    } else if (iter.current.value == 'type') {
+      return TypeDeclaration.parse(tokens);
+    }
+    iter.moveNext();
+    if (iter.current.value == '(') {
       return RoutineCall.parse(tokens);
-    else if (iter.current.value == ':') {
-      iter.moveNext();
-      if (iter.current.value == '=')
-        return Assignment.parse(tokens);
-      else
-        throw SyntaxError(
-            iter.current, 'Expected "=", found "${iter.current.value}"');
-    } else
+    } else if (iter.current.value == ':') {
+      return Assignment.parse(tokens);
+    } else {
       throw SyntaxError(tokens.first, 'Expected a statement');
+    }
   }
 }
