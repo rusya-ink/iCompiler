@@ -10,42 +10,26 @@ import 'sub-operator.dart';
 abstract class Sum implements Comparison {
   factory Sum.parse(Iterable<Token> tokens) {
     final iter = tokens.iterator;
-    iter.moveNext();
-    List<Token> product1;
-    // Check if our sum starts with a sign
-    if (['+', '-'].contains(iter.current.value)) {
-      product1.add(iter.current);
-      iter.moveNext();
+    List<Token> product;
+    Token prevToken = null;
+    while (iter.moveNext()) {
+      if (['+', '-'].contains(iter.current.value) &&
+          !['(', '%', '*', '/', null].contains(prevToken.value)) {
+        break;
+      }
+      product.add(iter.current);
+      prevToken = iter.current;
     }
-    final productBuffer = consumeUntil(iter, RegExp('^[+-]\$'));
-    if (productBuffer.isEmpty) {
-      throw SyntaxError(tokens.first, 'Summond is expected');
-    }
-    product1 = product1..addAll(productBuffer);
     if (iter.current?.value == '+') {
       iter.moveNext();
-      if (iter.current?.value == '-') {
-        // If the second summond is negative, simplify to substracrtion
-        iter.moveNext();
-        return SubOperator(
-            Product.parse(product1), Sum.parse(consumeFull(iter)));
-      } else if (iter.current?.value == '+') {
-        iter.moveNext();
-      }
-      return AddOperator(Product.parse(product1), Sum.parse(consumeFull(iter)));
+      return AddOperator(
+          Product.parse(product), Product.parse(consumeFull(iter)));
     } else if (iter.current?.value == '-') {
       iter.moveNext();
-      if (iter.current?.value == '-') {
-        // If the second summond is negative, simplify to addition
-        iter.moveNext();
-        return AddOperator(
-            Product.parse(product1), Sum.parse(consumeFull(iter)));
-      } else if (iter.current?.value == '+') {
-        iter.moveNext();
-      }
-      return SubOperator(Product.parse(product1), Sum.parse(consumeFull(iter)));
+      return SubOperator(
+          Product.parse(product), Product.parse(consumeFull(iter)));
     } else {
-      return Product.parse(product1);
+      return Product.parse(product);
     }
   }
 }
