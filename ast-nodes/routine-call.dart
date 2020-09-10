@@ -45,7 +45,7 @@ class RoutineCall implements Primary {
     if (lastToken == ',') {
       throw SyntaxError(null, 'Expected an argument');
     }
-    return RoutineCall(tempName, exprs.isEmpty ? null : exprs);
+    return RoutineCall(tempName, exprs);
   }
 
   String toString({int depth = 0, String prefix = ''}) {

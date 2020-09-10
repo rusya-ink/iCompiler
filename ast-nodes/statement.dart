@@ -1,3 +1,4 @@
+import '../iterator-utils.dart';
 import '../syntax-error.dart';
 import 'node.dart';
 import '../lexer.dart';
@@ -31,7 +32,9 @@ abstract class Statement implements Node {
     iter.moveNext();
     if (iter.current.value == '(') {
       return RoutineCall.parse(tokens);
-    } else if (iter.current.value == ':') {
+    }
+    var identifierBuffer = consumeUntil(iter, RegExp('^[:]\$'));
+    if (iter.current?.value == ':') {
       return Assignment.parse(tokens);
     } else {
       throw SyntaxError(tokens.first, 'Expected a statement');
