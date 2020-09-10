@@ -14,7 +14,7 @@ abstract class Sum implements Comparison {
     Token prevToken = null;
     while (iter.moveNext()) {
       if (['+', '-'].contains(iter.current.value) &&
-          !['(', '%', '*', '/', null].contains(prevToken.value)) {
+          !['(', '%', '*', '/', null].contains(prevToken?.value)) {
         break;
       }
       product.add(iter.current);
@@ -22,12 +22,10 @@ abstract class Sum implements Comparison {
     }
     if (iter.current?.value == '+') {
       iter.moveNext();
-      return AddOperator(
-          Product.parse(product), Product.parse(consumeFull(iter)));
+      return AddOperator(Product.parse(product), Sum.parse(consumeFull(iter)));
     } else if (iter.current?.value == '-') {
       iter.moveNext();
-      return SubOperator(
-          Product.parse(product), Product.parse(consumeFull(iter)));
+      return SubOperator(Product.parse(product), Sum.parse(consumeFull(iter)));
     } else {
       return Product.parse(product);
     }

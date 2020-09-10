@@ -17,20 +17,33 @@ class RoutineCall implements Primary {
     checkNext(iter, RegExp('[a-zA-Z_]\w*\$'), "Expected identifier");
     final tempName = iter.current.value;
     checkNext(iter, RegExp('^[(]\$'), 'Expected "("');
-    var exprs = [];
+    var exprs = []; // Final array of parsed Expressions
+    var expBuffer = []; // Array of Tokens that are located between main braces
     var argExpected =
-        false; // Flag that is set after encountering a comma (to detect cases like func(arg, ))
-    exprs = consumeStackUntil(iter, RegExp('^[(]\$'), RegExp('^[)]\$'));
-    checkNext(iter, RegExp('^[)]\$'), 'Expected ")"');
-    final exprIter = exprs.iterator;
+        false; // Flag that is set after encountering a comma (to detect missing arguments)
+    String
+        lastToken; // Store the last Token in the expBuffer in order to prevent trailing comma
+    expBuffer = consumeStackUntil(iter, RegExp('^[(]\$'), RegExp('^[)]\$'));
+    if (iter.current?.value != ')') {
+      throw SyntaxError(null, 'Expected ")"');
+    }
+    final exprIter = expBuffer.iterator;
     while (exprIter.moveNext()) {
-      final tokenBuff = consumeUntil(iter, RegExp("^[,]\$"));
-      if (tokenBuff.isEmpty && exprIter.moveNext() ||
-          tokenBuff.isEmpty && argExpected) {
-        throw SyntaxError(exprIter.current, 'Expected an argument');
+      final tokenBuff = consumeUntil(exprIter, RegExp("^[,]\$"));
+      // Check for the case with missing argument
+      if (tokenBuff.isEmpty && argExpected) {
+        throw SyntaxError(null, 'Expected an argument');
       } else if (!tokenBuff.isEmpty) {
         exprs.add(Expression.parse(tokenBuff));
       }
+      if (exprIter.current?.value == ',') {
+        argExpected = true;
+      }
+      lastToken = exprIter.current?.value;
+    }
+    // Check for the trailing comma
+    if (lastToken == ',') {
+      throw SyntaxError(null, 'Expected an argument');
     }
     return RoutineCall(tempName, exprs.isEmpty ? null : exprs);
   }
