@@ -10,51 +10,60 @@ import '../syntax-error.dart';
 abstract class Expression implements Statement {
   factory Expression.parse(Iterable<Token> tokens) {
     bool notFlag = false;
-    String operand;
+    String operator;
     var iterator = tokens.iterator;
 
     if (tokens.isEmpty) {
-      return AndOperator(BooleanLiteral(!notFlag), Comparison.parse([]));
+      throw SyntaxError(iterator.current, "Empty token");
     }
     notFlag = tokens.first.value == "not";
+
     if (notFlag) {
-      checkNext(iterator, RegExp("\^not\$"), "internal error");
-    }
-    if (!iterator.moveNext()) {
-      return AndOperator(BooleanLiteral(!notFlag), Comparison.parse([]));
-    }
-    final comparisonBuffer = consumeUntil(iterator, RegExp("\^(xor|or|and)\$"));
-
-    // Store operand
-    String opType = iterator.current.value;
-    if (opType == "and" || opType == "or" || opType == "xor") {
-      operand = opType;
+      // 'not' expression
+      iterator.moveNext(); // skip 'not' token
+      if (!iterator.moveNext()) {
+        throw SyntaxError(iterator.current, "Empty token");
+      }
+      final expression = Expression.parse(consumeFull(iterator));
+      return NotOperator(expression);
     } else {
-      return AndOperator(
-          BooleanLiteral(!notFlag), Comparison.parse(comparisonBuffer));
-    }
-    var expressionBuffer;
-    if (!iterator.moveNext()) {
-      expressionBuffer = [];
-    } else {
-      expressionBuffer = consumeFull(iterator);
-    }
+      // comparison [and/or/xor expression]
+      if (!iterator.moveNext()) {
+        throw SyntaxError(iterator.current, "Empty token");
+      }
+      final comparisonBuffer =
+          consumeUntil(iterator, RegExp("^(xor|or|and)\$"));
 
-    // Evaluate expression
-    var expression;
-    if (operand == "or") {
-      expression = OrOperator(Comparison.parse(comparisonBuffer),
-          Expression.parse(expressionBuffer));
-    } else if (operand == "xor") {
-      expression = XorOperator(Comparison.parse(comparisonBuffer),
-          Expression.parse(expressionBuffer));
-    } else if (operand == "and") {
-      expression = AndOperator(Comparison.parse(comparisonBuffer),
-          Expression.parse(expressionBuffer));
-    }
+      // Store operand
+      String opType = iterator.current.value;
+      if (opType == "and" || opType == "or" || opType == "xor") {
+        operator = opType;
+      } else {
+        return Comparison.parse(comparisonBuffer);
+      }
+      var expressionBuffer;
+      if (!iterator.moveNext()) {
+        throw SyntaxError(iterator.current, "Empty token");
+      } else {
+        expressionBuffer = consumeFull(iterator);
+      }
 
-    checkNoMore(iterator);
-    return AndOperator(BooleanLiteral(!notFlag), expression);
+      // Evaluate expression
+      var expression;
+      if (operator == "or") {
+        expression = OrOperator(Comparison.parse(comparisonBuffer),
+            Expression.parse(expressionBuffer));
+      } else if (operator == "xor") {
+        expression = XorOperator(Comparison.parse(comparisonBuffer),
+            Expression.parse(expressionBuffer));
+      } else if (operator == "and") {
+        expression = AndOperator(Comparison.parse(comparisonBuffer),
+            Expression.parse(expressionBuffer));
+      }
+
+      checkNoMore(iterator);
+      return expression;
+    }
   }
 
   factory Expression.parsePrioritized(Iterable<Token> tokens) {
@@ -64,22 +73,21 @@ abstract class Expression implements Statement {
       // distinguish between Expression and Primary
       if (iterator.current.value == "(" && iterator.moveNext()) {
         final expressionBuffer =
-            consumeUntil(iterator, RegExp("\^" + RegExp.escape(")") + "\$"));
+            consumeUntil(iterator, RegExp("^" + RegExp.escape(")") + "\$"));
         if (iterator.current.value != ")") {
           throw SyntaxError(iterator.current, "')' expected");
         }
 
         checkNoMore(iterator);
-        return AndOperator(
-            BooleanLiteral(true), Expression.parse(expressionBuffer));
+        return Expression.parse(expressionBuffer);
       } else if (iterator.current != "(") {
         final primaryBuffer = consumeFull(iterator);
-        return AndOperator(BooleanLiteral(true), Primary.parse(primaryBuffer));
+        return Primary.parse(primaryBuffer);
       } else {
         throw SyntaxError(iterator.current, "')' expected");
       }
     } else {
-      return AndOperator(BooleanLiteral(true), Primary.parse([]));
+      throw SyntaxError(iterator.current, "Empty token");
     }
   }
 }
