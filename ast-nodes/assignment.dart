@@ -10,7 +10,14 @@ class Assignment implements Statement {
 
   Assignment(this.lhs, this.rhs);
 
-  // TODO: implement .parse()
+  factory Assignment.parse(Iterable<Token> tokens) {
+    var iter = tokens.iterator;
+    var tempLhs = consumeUntil(iter, RegExp("^:=\$"));
+    checkNext(iter, RegExp(':=\$'), 'Expected ":="');
+    var expressionBody = consumeUntil(iterator, RegExp("^[;\n]\$"));
+    checkNoMore(iterator);
+    return Assignment(ModifiablePrimary.parse(tempLhs), Expression.parse(consumeFull(iter)));
+  }
 
   String toString({int depth = 0, String prefix = ''}) {
     return (
