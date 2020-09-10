@@ -1,4 +1,5 @@
 import '../iterator-utils.dart';
+import '../parser-utils.dart';
 import '../syntax-error.dart';
 import 'declaration.dart';
 import 'var-type.dart';
@@ -19,12 +20,11 @@ class VariableDeclaration extends Declaration {
     final iter = tokens.iterator;
     var tempName;
     checkNext(iter, RegExp('var\$'), 'Expected "var"');
-    if (iter.moveNext() &&
-        iter.current?.value != ':' &&
-        iter.current?.value != 'is')
-      tempName = iter.current.value;
-    else
-      throw SyntaxError(null, 'Expected a name of the variable');
+    checkNext(iter, RegExp('[A-Za-z_]\\w*\$'), 'Expected identifier');
+    if (isReserved(iter.current.value))
+      throw SyntaxError(
+          iter.current, 'The "${iter.current.value}" keyword is reserved');
+    tempName = iter.current.value;
     if (!iter.moveNext())
       throw SyntaxError(null, 'Type is required');
     else if (iter.current.value == ':') {

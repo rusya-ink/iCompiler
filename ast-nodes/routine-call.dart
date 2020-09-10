@@ -1,5 +1,6 @@
 import '../iterator-utils.dart';
 import '../lexer.dart';
+import '../parser-utils.dart';
 import '../syntax-error.dart';
 import 'primary.dart';
 import 'expression.dart';
@@ -15,6 +16,9 @@ class RoutineCall implements Primary {
   factory RoutineCall.parse(Iterable<Token> tokens) {
     final iter = tokens.iterator;
     checkNext(iter, RegExp('[a-zA-Z_]\w*\$'), "Expected identifier");
+    if (isReserved(iter.current.value))
+      throw SyntaxError(
+          iter.current, 'The "${iter.current.value}" keyword is reserved');
     final tempName = iter.current.value;
     checkNext(iter, RegExp('^[(]\$'), 'Expected "("');
     var exprs = <Expression>[]; // Final array of parsed Expressions
