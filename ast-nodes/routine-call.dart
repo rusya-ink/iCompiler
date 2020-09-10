@@ -17,7 +17,7 @@ class RoutineCall implements Primary {
     checkNext(iter, RegExp('[a-zA-Z_]\w*\$'), "Expected identifier");
     final tempName = iter.current.value;
     checkNext(iter, RegExp('^[(]\$'), 'Expected "("');
-    var exprs = []; // Final array of parsed Expressions
+    var exprs = <Expression>[]; // Final array of parsed Expressions
     var expBuffer = []; // Array of Tokens that are located between main braces
     var argExpected =
         false; // Flag that is set after encountering a comma (to detect missing arguments)
