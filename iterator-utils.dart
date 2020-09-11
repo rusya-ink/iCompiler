@@ -16,6 +16,40 @@ List<Token> consumeUntil(Iterator<Token> iterator, RegExp terminal) {
   return tokens;
 }
 
+List<Token> consumeFull(Iterator<Token> iterator) {
+  var tokens = <Token>[];
+  do {
+    tokens.add(iterator.current);
+  } while (iterator.moveNext());
+
+  return tokens;
+}
+
+List<Token> consumeStackUntil(
+    Iterator<Token> iterator, RegExp starting, RegExp terminal) {
+  var tokens = <Token>[];
+  var count = 0;
+  if (starting.hasMatch(iterator.current.value)) {
+    count++;
+  } else {
+    throw ArgumentError('Input sequence must start with a starting element!');
+  }
+  iterator.moveNext();
+  do {
+    if (starting.hasMatch(iterator.current.value)) {
+      count++;
+    } else if (terminal.hasMatch(iterator.current.value)) {
+      count--;
+    }
+    if (count == 0) {
+      break;
+    }
+    tokens.add(iterator.current);
+  } while (iterator.moveNext());
+
+  return tokens;
+}
+
 /// Check that the next token in the [iterator] matches the [expected] regex.
 ///
 /// Throws a syntax error with a given [errorMessage] if the check fails.
