@@ -37,12 +37,12 @@ class WhileLoop implements Statement {
     var bodyIter = loopBody.iterator;
     var statements = <Statement>[];
     while (bodyIter.moveNext()) {
-      var statement = consumeUntil(bodyIter, RegExp("[\n;]\$"));
-      if (statement.isEmpty) {
+      var statementLine = consumeUntil(bodyIter, RegExp("[\n;]\$"));
+      if (statementLine.isEmpty) {
         continue;
       }
 
-      statements.add(Statement.parse(statement));
+      statements.add(Statement.parse(statementLine));
     }
 
     return WhileLoop(Expression.parse(loopCondition), statements);
