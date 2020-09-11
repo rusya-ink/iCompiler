@@ -1,6 +1,9 @@
 import 'node.dart';
 import 'var-type.dart';
 import '../print-utils.dart';
+import '../lexer.dart';
+import '../iterator-utils.dart';
+import '../syntax-error.dart';
 
 /// A routine parameter, characterized by the [name] and the [type].
 class Parameter implements Node {
@@ -9,7 +12,15 @@ class Parameter implements Node {
 
   Parameter(this.name, this.type);
 
-  // TODO: implement .parse()
+  factory Parameter.parse(Iterable<Token> tokens) {
+    var iter = tokens.iterator;
+    checkNext(iter, RegExp('[a-zA-Z_]\\w*\$'), "Expected identifier");
+    var nameBuffer = iter.current.value;
+    checkNext(iter, RegExp(':\$'), "Expected ':'");
+    iter.moveNext();
+
+    return Parameter(nameBuffer, VarType.parse(consumeFull(iter)));
+  }
 
   String toString({int depth = 0, String prefix = ''}) {
     return (
