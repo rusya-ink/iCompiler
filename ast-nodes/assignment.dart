@@ -19,16 +19,16 @@ class Assignment implements Statement {
     var iter = tokens.iterator;
 
     if (tokens.isEmpty) {
-      throw SyntaxError(iterator.current, "Expected an assignment");
+      throw SyntaxError(iter.current, "Expected an assignment");
     }
 
-    var tempLhs = consumeUntil(iter, RegExp("^:=\$"));
+    var tempLhs = consumeUntil(iter, RegExp(":=\$"));
 
     if (tempLhs.isEmpty) {
-      throw SyntaxError(iterator.current, "Expected an identifier");
+      throw SyntaxError(iter.current, "Expected an identifier");
     }
 
-    checkNext(iter, RegExp(':=\$'), 'Expected ":="');
+    checkThis(iter, RegExp(':=\$'), 'Expected ":="');
     iter.moveNext();
     return Assignment(ModifiablePrimary.parse(tempLhs), Expression.parse(consumeFull(iter)));
   }
