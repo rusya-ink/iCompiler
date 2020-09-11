@@ -1,6 +1,10 @@
 import 'statement.dart';
 import 'expression.dart';
 import '../print-utils.dart';
+import '../lexer.dart';
+import '../iterator-utils.dart';
+import '../syntax-error.dart';
+
 
 /// A `while` loop.
 class WhileLoop implements Statement {
