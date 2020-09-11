@@ -17,18 +17,23 @@ class Range implements Node {
       throw SyntaxError(iterator.current, "Expected '..' in range");
     }
 
-    var expStart = Expression.parse(
-        consumeUntil(iterator, RegExp("\^" + RegExp.escape("..") + "\$")));
-
-    var expEnd;
-    if (iterator.current == "..") {
-      if (iterator.moveNext()) {
-        expEnd = Expression.parse(consumeFull(iterator));
+    var expStartBuffer = List<Token>();
+    var prevToken = iterator.current;
+    while (iterator.moveNext()) {
+      if (prevToken.value == "." && iterator.current.value == ".") {
+        break;
       } else {
-        expEnd = Expression.parse([]);
+        expStartBuffer.add(prevToken);
+        prevToken = iterator.current;
       }
+    }
+
+    Expression expStart, expEnd;
+    if (iterator.moveNext()) {
+      expStart = Expression.parse(expStartBuffer);
+      expEnd = Expression.parse(consumeFull(iterator));
     } else {
-      throw SyntaxError(iterator.current, "Expected '..' in range");
+      throw SyntaxError(iterator.current, "Expected .. Expression");
     }
 
     return Range(expStart, expEnd);
