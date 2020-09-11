@@ -22,13 +22,14 @@ class Assignment implements Statement {
       throw SyntaxError(iter.current, "Expected an assignment");
     }
 
-    var tempLhs = consumeUntil(iter, RegExp(":=\$"));
+    var tempLhs = consumeUntil(iter, RegExp(":\$"));
 
     if (tempLhs.isEmpty) {
       throw SyntaxError(iter.current, "Expected an identifier");
     }
 
-    checkThis(iter, RegExp(':=\$'), 'Expected ":="');
+    checkThis(iter, RegExp(':\$'), 'Expected ":="');
+    checkNext(iter, RegExp('=\$'), 'Expected ":="');
     iter.moveNext();
     return Assignment(ModifiablePrimary.parse(tempLhs), Expression.parse(consumeFull(iter)));
   }

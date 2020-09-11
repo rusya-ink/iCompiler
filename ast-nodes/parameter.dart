@@ -14,7 +14,7 @@ class Parameter implements Node {
 
   factory Parameter.parse(Iterable<Token> tokens) {
     var iter = tokens.iterator;
-    checkNext(iter, RegExp('[a-zA-Z_]\w*\$'), "Expected identifier");
+    checkNext(iter, RegExp('[a-zA-Z_]\\w*\$'), "Expected identifier");
     var nameBuffer = iter.current.value;
     checkNext(iter, RegExp(':\$'), "Expected ':'");
     iter.moveNext();

@@ -25,21 +25,18 @@ abstract class Primary implements Product {
       var bLBuffer = new BooleanLiteral(false)
       return bLBuffer;
 
-    } else {
-      var tempToken = consumeUntil(iter, RegExp('\D'));
-      if (!tempToken.isEmpty && !RegExp('\D').hasMatch(iter.current.value)) {
-        var iLBuffer = new IntegerLiteral(int.parse(tempToken));
+    } else if (int.tryParse(iter.current.value) != null) {
+        var iLBuffer = new IntegerLiteral(int.parse(iter.current.value));
+        checkNoMore(iter);
         return iLBuffer;
 
-      } else if (!tempToken.isEmpty && iter.current.value == '.') {
-        checkNext(iter, RegExp('\d*\$'), "Expected real variable");
-        var rLBuffer = new RealLiteral(double.parse(tempToken + '.' + iter.current.value));
+    } else if (double.tryParse(iter.current.value) != null) {
+        var rLBuffer = new RealLiteral(double.parse(iter.current.value));
         checkNoMore(iter);
         return rLBuffer;
 
-      } else {
-        return ModifiablePrimary.parse(tokens);
-      }
+    } else {
+      return ModifiablePrimary.parse(tokens);
     }
   }
 }
