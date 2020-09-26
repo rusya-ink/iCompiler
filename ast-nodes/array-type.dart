@@ -3,9 +3,12 @@ import 'expression.dart';
 import '../print-utils.dart';
 import '../iterator-utils.dart';
 import '../lexer.dart';
+import '../symbol-table/scope-element.dart';
 
 /// An array type with optional [size].
 class ArrayType implements VarType {
+  ScopeElement scopeMark;
+
   Expression size;
   VarType elementType;
 
@@ -35,5 +38,11 @@ class ArrayType implements VarType {
       + (this.size?.toString(depth: depth + 1, prefix: 'size: ') ?? '')
       + (this.elementType?.toString(depth: depth + 1, prefix: 'element type: ') ?? '')
     );
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.size.propagateScopeMark(parentMark);
+    this.elementType.propagateScopeMark(parentMark);
   }
 }

@@ -1,14 +1,21 @@
 import 'statement.dart';
 import 'variable.dart';
 import 'range.dart';
+import 'declaration.dart';
+import 'scope-creator.dart';
 import '../print-utils.dart';
 import '../iterator-utils.dart';
 import '../parser-utils.dart';
 import '../syntax-error.dart';
 import '../lexer.dart';
+import '../symbol-table/scope.dart';
+import '../symbol-table/scope-element.dart';
 
 /// A `for` loop.
-class ForLoop implements Statement {
+class ForLoop implements Statement, ScopeCreator {
+  ScopeElement scopeMark;
+  List<Scope> scopes;
+
   Variable loopVariable;
   Range range;
   List<Statement> body;
@@ -53,5 +60,28 @@ class ForLoop implements Statement {
       + drawDepth('body:', depth + 1)
       + this.body.map((node) => node?.toString(depth: depth + 2) ?? '').join('')
     );
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.loopVariable.propagateScopeMark(parentMark);
+    this.range.propagateScopeMark(parentMark);
+
+    var scope = Scope();
+    this.scopes = [scope];
+    ScopeElement currentMark = scope.lastChild;
+
+    for (var statement in this.body) {
+      statement.propagateScopeMark(currentMark);
+      if (statement is Declaration) {
+        currentMark = scope.addDeclaration(statement);
+      }
+
+      if (statement is ScopeCreator) {
+        (statement as ScopeCreator).scopes.forEach(
+          (subscope) => scope.addSubscope(subscope)
+        );
+      }
+    }
   }
 }

@@ -4,9 +4,12 @@ import 'expression.dart';
 import '../print-utils.dart';
 import '../iterator-utils.dart';
 import '../lexer.dart';
+import '../symbol-table/scope-element.dart';
 
 /// An iteration range for the `for` loop.
 class Range implements Node {
+  ScopeElement scopeMark;
+
   Expression start;
   Expression end;
 
@@ -30,5 +33,11 @@ class Range implements Node {
     return (drawDepth('${prefix}Range', depth) +
         (this.start?.toString(depth: depth + 1, prefix: 'start: ') ?? '') +
         (this.end?.toString(depth: depth + 1, prefix: 'end: ') ?? ''));
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.start.propagateScopeMark(parentMark);
+    this.end.propagateScopeMark(parentMark);
   }
 }

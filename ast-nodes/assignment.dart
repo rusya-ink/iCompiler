@@ -5,11 +5,12 @@ import '../print-utils.dart';
 import '../lexer.dart';
 import '../iterator-utils.dart';
 import '../syntax-error.dart';
-
-
+import '../symbol-table/scope-element.dart';
 
 /// An assignment of the value on the right hand side ([rhs]) to the left hand side ([lhs]).
 class Assignment implements Statement {
+  ScopeElement scopeMark;
+
   ModifiablePrimary lhs;
   Expression rhs;
 
@@ -34,5 +35,11 @@ class Assignment implements Statement {
       + (this.lhs?.toString(depth: depth + 1, prefix: 'lhs: ') ?? '')
       + (this.rhs?.toString(depth: depth + 1, prefix: 'rhs: ') ?? '')
     );
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.lhs.propagateScopeMark(parentMark);
+    this.rhs.propagateScopeMark(parentMark);
   }
 }

@@ -1,13 +1,20 @@
 import 'statement.dart';
 import 'expression.dart';
+import 'declaration.dart';
+import 'scope-creator.dart';
 import '../print-utils.dart';
 import '../lexer.dart';
 import '../iterator-utils.dart';
 import '../syntax-error.dart';
+import '../symbol-table/scope.dart';
+import '../symbol-table/scope-element.dart';
 
 
 /// A `while` loop.
-class WhileLoop implements Statement {
+class WhileLoop implements Statement, ScopeCreator {
+  ScopeElement scopeMark;
+  List<Scope> scopes;
+
   Expression condition;
   List<Statement> body;
 
@@ -46,5 +53,27 @@ class WhileLoop implements Statement {
       + drawDepth('body:', depth + 1)
       + this.body.map((node) => node?.toString(depth: depth + 2) ?? '').join('')
     );
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.condition.propagateScopeMark(parentMark);
+
+    var scope = Scope();
+    this.scopes = [scope];
+    ScopeElement currentMark = scope.lastChild;
+
+    for (var statement in this.body) {
+      statement.propagateScopeMark(currentMark);
+      if (statement is Declaration) {
+        currentMark = scope.addDeclaration(statement);
+      }
+
+      if (statement is ScopeCreator) {
+        (statement as ScopeCreator).scopes.forEach(
+          (subscope) => scope.addSubscope(subscope)
+        );
+      }
+    }
   }
 }

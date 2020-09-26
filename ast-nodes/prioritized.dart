@@ -3,9 +3,12 @@ import 'expression.dart';
 import '../lexer.dart';
 import '../iterator-utils.dart';
 import '../print-utils.dart';
+import '../symbol-table/scope-element.dart';
 
 /// A prioritized expression.
 class Prioritized implements Product {
+  ScopeElement scopeMark;
+
   Expression operand;
 
   Prioritized(this.operand);
@@ -31,5 +34,10 @@ class Prioritized implements Product {
       drawDepth('${prefix}Prioritized', depth)
       + (this.operand?.toString(depth: depth + 1) ?? '')
     );
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.operand.propagateScopeMark(parentMark);
   }
 }

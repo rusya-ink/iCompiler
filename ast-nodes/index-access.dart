@@ -1,6 +1,7 @@
 import 'modifiable-primary.dart';
 import 'expression.dart';
 import '../print-utils.dart';
+import '../symbol-table/scope-element.dart';
 
 /// An array element access by [index] – for either reading or writing.
 ///
@@ -16,6 +17,8 @@ import '../print-utils.dart';
 /// )
 /// ```
 class IndexAccess implements ModifiablePrimary {
+  ScopeElement scopeMark;
+
   Expression index;
   ModifiablePrimary object;
 
@@ -25,5 +28,11 @@ class IndexAccess implements ModifiablePrimary {
     return (drawDepth('${prefix}IndexAccess', depth) +
         (this.index?.toString(depth: depth + 1, prefix: 'index: ') ?? '') +
         (this.object?.toString(depth: depth + 1, prefix: 'object: ') ?? ''));
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.index.propagateScopeMark(parentMark);
+    this.object.propagateScopeMark(parentMark);
   }
 }

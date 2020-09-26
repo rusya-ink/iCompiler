@@ -6,11 +6,14 @@ import 'var-type.dart';
 import 'expression.dart';
 import '../lexer.dart';
 import '../print-utils.dart';
+import '../symbol-table/scope-element.dart';
 
 /// A variable declaration contains a [type] and the initial [value].
 ///
 /// Both of these can be set to [null].
 class VariableDeclaration extends Declaration {
+  ScopeElement scopeMark;
+
   VarType type;
   Expression value;
 
@@ -55,5 +58,11 @@ class VariableDeclaration extends Declaration {
     return (drawDepth('${prefix}VariableDeclaration("${this.name}")', depth) +
         (this.type?.toString(depth: depth + 1, prefix: 'type: ') ?? '') +
         (this.value?.toString(depth: depth + 1, prefix: 'value: ') ?? ''));
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.type.propagateScopeMark(parentMark);
+    this.value.propagateScopeMark(parentMark);
   }
 }
