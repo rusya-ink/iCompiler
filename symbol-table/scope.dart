@@ -2,6 +2,7 @@ import 'scope-element.dart';
 import 'scope-declaration.dart';
 import 'scope-start.dart';
 import '../ast-nodes/declaration.dart';
+import '../print-utils.dart';
 
 /// The scope of declaring objects.
 ///
@@ -26,5 +27,19 @@ class Scope extends ScopeElement {
 
   void addSubscope(Scope subscope) {
     this.add(subscope);
+  }
+
+  String toString({int depth = 0}) {
+    var chain = <ScopeElement>[];
+    var item = this.lastChild;
+    while (item is! ScopeStart) {
+      chain.add(item);
+      item = item.next;
+    }
+
+    return (
+      drawDepth('Scope', depth)
+      + chain.reversed.map((node) => node.toString(depth: depth + 1)).join('')
+    );
   }
 }

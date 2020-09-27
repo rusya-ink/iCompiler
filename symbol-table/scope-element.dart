@@ -31,4 +31,6 @@ abstract class ScopeElement {
 
     return null;
   }
+
+  String toString({int depth = 0});
 }

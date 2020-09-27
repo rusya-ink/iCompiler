@@ -1,5 +1,6 @@
 import 'scope-element.dart';
 import '../ast-nodes/declaration.dart';
+import '../print-utils.dart';
 
 /// An object declaration in some scope.
 ///
@@ -8,4 +9,8 @@ class ScopeDeclaration extends ScopeElement {
   Declaration declaration;
 
   ScopeDeclaration(this.declaration);
+
+  String toString({int depth = 0}) {
+    return drawDepth("Declaration '${this.declaration.name}'", depth);
+  }
 }

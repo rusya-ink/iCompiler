@@ -8,4 +8,8 @@ class ScopeStart extends ScopeElement {
   Scope parent;
 
   ScopeStart(this.parent);
+
+  String toString({int depth = 0}) {
+    return '';
+  }
 }
