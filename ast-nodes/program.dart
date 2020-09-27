@@ -96,8 +96,9 @@ class Program implements Node, ScopeCreator {
             .join(''));
   }
 
-  void buildSymbolTable() {
+  Scope buildSymbolTable() {
     this.propagateScopeMark(null);
+    return this.scopes[0];
   }
 
   void propagateScopeMark(ScopeElement parentMark) {
