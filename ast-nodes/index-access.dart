@@ -38,4 +38,8 @@ class IndexAccess implements ModifiablePrimary {
     this.index.propagateScopeMark(parentMark);
     this.object.propagateScopeMark(parentMark);
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

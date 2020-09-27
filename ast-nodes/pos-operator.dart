@@ -11,4 +11,8 @@ class PosOperator extends UnaryRelation implements Primary {
   bool isConstant;
 
   PosOperator(Expression operand) : super(operand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

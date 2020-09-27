@@ -12,4 +12,8 @@ class ModOperator extends BinaryRelation implements Product {
 
   ModOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

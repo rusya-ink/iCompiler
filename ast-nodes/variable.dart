@@ -20,4 +20,8 @@ class Variable implements ModifiablePrimary {
   void propagateScopeMark(ScopeElement parentMark) {
     this.scopeMark = parentMark;
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

@@ -21,4 +21,8 @@ class RealLiteral implements Primary {
   void propagateScopeMark(ScopeElement parentMark) {
     this.scopeMark = parentMark;
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

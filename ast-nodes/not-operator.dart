@@ -11,4 +11,8 @@ class NotOperator extends UnaryRelation {
   bool isConstant;
 
   NotOperator(Expression operand) : super(operand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

@@ -12,4 +12,8 @@ class MulOperator extends BinaryRelation implements Product {
 
   MulOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

@@ -42,4 +42,8 @@ class Assignment implements Statement {
     this.lhs.propagateScopeMark(parentMark);
     this.rhs.propagateScopeMark(parentMark);
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

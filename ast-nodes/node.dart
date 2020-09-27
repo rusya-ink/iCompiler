@@ -13,4 +13,6 @@ abstract class Node {
   String toString({int depth = 0, String prefix = ''});
 
   void propagateScopeMark(ScopeElement parentMark);
+
+  void checkSemantics();
 }

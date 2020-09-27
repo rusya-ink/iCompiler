@@ -12,4 +12,8 @@ class AndOperator extends BinaryRelation {
 
   AndOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

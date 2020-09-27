@@ -45,4 +45,8 @@ class Parameter implements Node {
     this.scopeMark = parentMark;
     this.type.propagateScopeMark(parentMark);
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

@@ -31,4 +31,8 @@ class ReturnStatement implements Statement {
     this.scopeMark = parentMark;
     this.value.propagateScopeMark(parentMark);
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

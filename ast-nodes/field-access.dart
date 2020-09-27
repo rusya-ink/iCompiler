@@ -31,4 +31,8 @@ class FieldAccess implements ModifiablePrimary {
     this.scopeMark = parentMark;
     this.object.propagateScopeMark(parentMark);
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

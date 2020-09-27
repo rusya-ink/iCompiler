@@ -12,4 +12,8 @@ class DivOperator extends BinaryRelation implements Product {
 
   DivOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

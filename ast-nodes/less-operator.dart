@@ -13,4 +13,8 @@ class LessOperator extends BinaryRelation implements Comparison {
 
   LessOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

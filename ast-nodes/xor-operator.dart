@@ -12,4 +12,8 @@ class XorOperator extends BinaryRelation {
 
   XorOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

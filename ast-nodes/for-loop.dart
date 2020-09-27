@@ -84,4 +84,8 @@ class ForLoop implements Statement, ScopeCreator {
       }
     }
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

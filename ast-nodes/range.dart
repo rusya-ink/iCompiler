@@ -40,4 +40,8 @@ class Range implements Node {
     this.start.propagateScopeMark(parentMark);
     this.end.propagateScopeMark(parentMark);
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

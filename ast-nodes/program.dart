@@ -116,4 +116,8 @@ class Program implements Node, ScopeCreator {
       }
     }
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

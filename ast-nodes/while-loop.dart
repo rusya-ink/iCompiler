@@ -76,4 +76,8 @@ class WhileLoop implements Statement, ScopeCreator {
       }
     }
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

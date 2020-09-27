@@ -12,4 +12,8 @@ class OrOperator extends BinaryRelation {
 
   OrOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

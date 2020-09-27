@@ -77,4 +77,8 @@ class RoutineCall implements Primary {
       argument.propagateScopeMark(parentMark);
     }
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

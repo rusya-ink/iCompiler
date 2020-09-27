@@ -41,4 +41,8 @@ class TypeDeclaration extends Declaration {
     this.scopeMark = parentMark;
     this.value.propagateScopeMark(parentMark);
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

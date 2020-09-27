@@ -80,7 +80,7 @@ class IfStatement implements Statement, ScopeCreator {
   void propagateScopeMark(ScopeElement parentMark) {
     this.scopeMark = parentMark;
     this.condition.propagateScopeMark(parentMark);
-    
+
     var scopeTrue = Scope();
     var scopeFalse = Scope();
     this.scopes = [scopeTrue, scopeFalse];
@@ -100,5 +100,9 @@ class IfStatement implements Statement, ScopeCreator {
         }
       }
     }
+  }
+
+  void checkSemantics() {
+    // TODO: implement
   }
 }

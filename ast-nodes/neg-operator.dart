@@ -11,4 +11,8 @@ class NegOperator extends UnaryRelation implements Primary {
   bool isConstant;
 
   NegOperator(Expression operand) : super(operand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

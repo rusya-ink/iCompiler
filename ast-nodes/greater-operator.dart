@@ -13,4 +13,8 @@ class GreaterOperator extends BinaryRelation implements Comparison {
 
   GreaterOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

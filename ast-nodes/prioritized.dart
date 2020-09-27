@@ -43,4 +43,8 @@ class Prioritized implements Product {
     this.scopeMark = parentMark;
     this.operand.propagateScopeMark(parentMark);
   }
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

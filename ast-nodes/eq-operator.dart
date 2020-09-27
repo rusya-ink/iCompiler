@@ -13,4 +13,8 @@ class EqOperator extends BinaryRelation implements Comparison {
 
   EqOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }

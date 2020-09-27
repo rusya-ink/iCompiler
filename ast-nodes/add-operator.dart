@@ -12,4 +12,8 @@ class AddOperator extends BinaryRelation implements Sum {
 
   AddOperator(Expression leftOperand, Expression rightOperand)
     : super(leftOperand, rightOperand);
+
+  void checkSemantics() {
+    // TODO: implement
+  }
 }
