@@ -1,5 +1,6 @@
 import 'product.dart';
 import 'expression.dart';
+import 'var-type.dart';
 import '../lexer.dart';
 import '../iterator-utils.dart';
 import '../print-utils.dart';
@@ -7,6 +8,8 @@ import '../symbol-table/scope-element.dart';
 
 /// A prioritized expression.
 class Prioritized implements Product {
+  VarType resultType;
+  bool isConstant;
   ScopeElement scopeMark;
 
   Expression operand;

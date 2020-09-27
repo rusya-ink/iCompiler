@@ -1,9 +1,13 @@
 import 'primary.dart';
+import 'integer-type.dart';
+import 'var-type.dart';
 import '../print-utils.dart';
 import '../symbol-table/scope-element.dart';
 
 /// A literal integer number in code.
 class IntegerLiteral implements Primary {
+  VarType resultType = IntegerType();
+  bool isConstant = true;
   ScopeElement scopeMark;
 
   int value;

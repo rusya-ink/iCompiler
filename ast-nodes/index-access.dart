@@ -1,5 +1,6 @@
 import 'modifiable-primary.dart';
 import 'expression.dart';
+import 'var-type.dart';
 import '../print-utils.dart';
 import '../symbol-table/scope-element.dart';
 
@@ -17,6 +18,8 @@ import '../symbol-table/scope-element.dart';
 /// )
 /// ```
 class IndexAccess implements ModifiablePrimary {
+  VarType resultType;
+  bool isConstant = false;
   ScopeElement scopeMark;
 
   Expression index;

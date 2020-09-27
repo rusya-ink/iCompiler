@@ -1,9 +1,12 @@
 import 'modifiable-primary.dart';
+import 'var-type.dart';
 import '../print-utils.dart';
 import '../symbol-table/scope-element.dart';
 
 /// A variable reference by [name] – for either reading or writing.
 class Variable implements ModifiablePrimary {
+  VarType resultType;
+  bool isConstant = false;
   ScopeElement scopeMark;
 
   String name;

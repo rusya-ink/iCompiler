@@ -1,4 +1,5 @@
 import 'modifiable-primary.dart';
+import 'var-type.dart';
 import '../print-utils.dart';
 import '../symbol-table/scope-element.dart';
 
@@ -10,6 +11,8 @@ import '../symbol-table/scope-element.dart';
 /// FieldAccess("c", FieldAccess("b", Variable("a")))
 /// ```
 class FieldAccess implements ModifiablePrimary {
+  VarType resultType;
+  bool isConstant;
   ScopeElement scopeMark;
 
   String name;

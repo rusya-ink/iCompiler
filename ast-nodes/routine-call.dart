@@ -1,14 +1,17 @@
+import 'primary.dart';
+import 'expression.dart';
+import 'var-type.dart';
 import '../iterator-utils.dart';
 import '../lexer.dart';
 import '../parser-utils.dart';
 import '../syntax-error.dart';
-import 'primary.dart';
-import 'expression.dart';
 import '../print-utils.dart';
 import '../symbol-table/scope-element.dart';
 
 /// A routine call by [name], passing zero or more [arguments].
 class RoutineCall implements Primary {
+  VarType resultType;
+  bool isConstant = false;
   ScopeElement scopeMark;
 
   String name;
@@ -71,7 +74,7 @@ class RoutineCall implements Primary {
   void propagateScopeMark(ScopeElement parentMark) {
     this.scopeMark = parentMark;
     for (var argument in arguments) {
-      argument.propagateScopeMark(parentMark);  
+      argument.propagateScopeMark(parentMark);
     }
   }
 }
