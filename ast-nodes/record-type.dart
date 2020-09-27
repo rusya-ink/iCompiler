@@ -73,4 +73,10 @@ class RecordType implements VarType, ScopeCreator {
       currentMark = scope.addDeclaration(field);
     }
   }
+
+  void checkSemantics() {
+    for (var declaration in this.fields) {
+      declaration.checkSemantics();
+    }
+  }
 }

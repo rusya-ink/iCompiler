@@ -15,4 +15,6 @@ class IntegerType implements VarType {
   void propagateScopeMark(ScopeElement parentMark) {
     this.scopeMark = parentMark;
   }
+
+  void checkSemantics() {}
 }

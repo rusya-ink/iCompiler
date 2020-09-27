@@ -108,4 +108,18 @@ class RoutineDeclaration extends Declaration implements ScopeCreator {
       }
     }
   }
+
+  void checkSemantics() {
+    this.scopeMark.ensureNoOther(this.name);
+
+    for (var parameter in this.parameters) {
+      parameter.checkSemantics();
+    }
+
+    this.returnType.checkSemantics();
+
+    for (var statement in this.body) {
+      statement.checkSemantics();
+    }
+  }
 }

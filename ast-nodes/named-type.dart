@@ -1,6 +1,7 @@
 import 'var-type.dart';
 import 'type-declaration.dart';
 import '../print-utils.dart';
+import '../semantic-error.dart';
 import '../symbol-table/scope-element.dart';
 
 /// A type that was specified by the [name].
@@ -19,5 +20,14 @@ class NamedType implements VarType {
 
   void propagateScopeMark(ScopeElement parentMark) {
     this.scopeMark = parentMark;
+  }
+
+  void checkSemantics() {
+    var declaration = this.scopeMark.resolve(this.name);
+    if (declaration == null) {
+      throw SemanticError(this, "'$name' is not defined");
+    } else if (declaration is! TypeDeclaration) {
+      throw SemanticError(this, "'$name' is not a valid type in this scope");
+    }
   }
 }
