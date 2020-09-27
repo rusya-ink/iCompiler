@@ -62,8 +62,8 @@ class VariableDeclaration extends Declaration {
 
   void propagateScopeMark(ScopeElement parentMark) {
     this.scopeMark = parentMark;
-    this.type.propagateScopeMark(parentMark);
-    this.value.propagateScopeMark(parentMark);
+    this.type?.propagateScopeMark(parentMark);
+    this.value?.propagateScopeMark(parentMark);
   }
 
   void checkSemantics() {

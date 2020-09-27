@@ -16,7 +16,9 @@ class ReturnStatement implements Statement {
   factory ReturnStatement.parse(Iterable<Token> tokens) {
     var iterator = tokens.iterator;
     checkNext(iterator, RegExp('return\$'), "Expected 'return'");
-    iterator.moveNext();
+    if (!iterator.moveNext()) {
+      return ReturnStatement(null);
+    }
     return ReturnStatement(Expression.parse(consumeFull(iterator)));
   }
 
@@ -29,7 +31,7 @@ class ReturnStatement implements Statement {
 
   void propagateScopeMark(ScopeElement parentMark) {
     this.scopeMark = parentMark;
-    this.value.propagateScopeMark(parentMark);
+    this.value?.propagateScopeMark(parentMark);
   }
 
   void checkSemantics() {

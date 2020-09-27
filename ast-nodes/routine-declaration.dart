@@ -86,14 +86,15 @@ class RoutineDeclaration extends Declaration implements ScopeCreator {
 
   void propagateScopeMark(ScopeElement parentMark) {
     this.scopeMark = parentMark;
-    for (var parameter in this.parameters) {
-      parameter.propagateScopeMark(parentMark);
-    }
-    this.returnType.propagateScopeMark(parentMark);
-
     var scope = Scope();
     this.scopes = [scope];
     ScopeElement currentMark = scope.lastChild;
+
+    for (var parameter in this.parameters) {
+      parameter.propagateScopeMark(parentMark);
+      currentMark = scope.addDeclaration(parameter.toDeclaration());
+    }
+    this.returnType?.propagateScopeMark(parentMark);
 
     for (var statement in this.body) {
       statement.propagateScopeMark(currentMark);

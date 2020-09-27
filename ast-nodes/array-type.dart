@@ -44,7 +44,7 @@ class ArrayType implements VarType {
 
   void propagateScopeMark(ScopeElement parentMark) {
     this.scopeMark = parentMark;
-    this.size.propagateScopeMark(parentMark);
+    this.size?.propagateScopeMark(parentMark);
     this.elementType.propagateScopeMark(parentMark);
   }
 
