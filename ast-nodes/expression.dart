@@ -12,7 +12,6 @@ abstract class Expression implements Statement {
 
   factory Expression.parse(Iterable<Token> tokens) {
     var iterator = tokens.iterator;
-
     if (!iterator.moveNext()) {
       throw SyntaxError(iterator.current, "Expected expression");
     }

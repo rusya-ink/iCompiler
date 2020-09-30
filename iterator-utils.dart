@@ -19,6 +19,9 @@ List<Token> consumeUntil(Iterator<Token> iterator, RegExp terminal) {
 /// Consume all of the tokens from the iterator.
 List<Token> consumeFull(Iterator<Token> iterator) {
   var tokens = <Token>[];
+  if (iterator.current == null) {
+    return [];
+  }
   do {
     tokens.add(iterator.current);
   } while (iterator.moveNext());
@@ -40,6 +43,9 @@ List<Token> consumeAwareUntil(
   var stackCount = 0;
 
   do {
+    if (iterator.current == null) {
+      throw SyntaxError(null, "Invalid syntax");
+    }
     if (starting.hasMatch(iterator.current.value)) {
       stackCount++;
     } else if (ending.hasMatch(iterator.current.value) && stackCount > 0) {

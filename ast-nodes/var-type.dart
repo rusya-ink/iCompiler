@@ -38,7 +38,8 @@ abstract class VarType implements Node {
     }
 
     if (isReserved(iterator.current.value)) {
-      throw SyntaxError(iterator.current, "The '${iterator.current.value}' keyword is reserved");
+      throw SyntaxError(iterator.current,
+          "The '${iterator.current.value}' keyword is reserved");
     }
 
     var result = NamedType(iterator.current.value);
