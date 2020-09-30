@@ -1,8 +1,11 @@
 import 'expression.dart';
 import '../print-utils.dart';
+import '../symbol-table/scope-element.dart';
 
 /// An abstract binary relation with two operands.
 abstract class BinaryRelation implements Expression {
+  ScopeElement scopeMark;
+
   Expression leftOperand;
   Expression rightOperand;
 
@@ -14,5 +17,11 @@ abstract class BinaryRelation implements Expression {
       + (this.leftOperand?.toString(depth: depth + 1, prefix: 'left operand: ') ?? '')
       + (this.rightOperand?.toString(depth: depth + 1, prefix: 'right operand: ') ?? '')
     );
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.leftOperand.propagateScopeMark(parentMark);
+    this.rightOperand.propagateScopeMark(parentMark);
   }
 }

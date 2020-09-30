@@ -1,12 +1,18 @@
 import 'var-type.dart';
 import 'variable-declaration.dart';
+import 'scope-creator.dart';
 import '../lexer.dart';
 import '../syntax-error.dart';
 import '../iterator-utils.dart';
 import '../print-utils.dart';
+import '../symbol-table/scope.dart';
+import '../symbol-table/scope-element.dart';
 
 /// A compound type that has several [fields] inside.
-class RecordType implements VarType {
+class RecordType implements VarType, ScopeCreator {
+  ScopeElement scopeMark;
+  List<Scope> scopes;
+
   List<VariableDeclaration> fields;
 
   RecordType(this.fields);
@@ -53,5 +59,24 @@ class RecordType implements VarType {
       + drawDepth('fields:', depth + 1)
       + this.fields.map((node) => node?.toString(depth: depth + 2) ?? '').join('')
     );
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+
+    var scope = Scope();
+    this.scopes = [scope];
+    ScopeElement currentMark = scope.lastChild;
+
+    for (var field in this.fields) {
+      field.propagateScopeMark(currentMark);
+      currentMark = scope.addDeclaration(field);
+    }
+  }
+
+  void checkSemantics() {
+    for (var declaration in this.fields) {
+      declaration.checkSemantics();
+    }
   }
 }

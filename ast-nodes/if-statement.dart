@@ -1,12 +1,19 @@
 import 'statement.dart';
 import 'expression.dart';
+import 'declaration.dart';
+import 'scope-creator.dart';
 import '../print-utils.dart';
 import '../iterator-utils.dart';
 import '../lexer.dart';
 import '../syntax-error.dart';
+import '../symbol-table/scope.dart';
+import '../symbol-table/scope-element.dart';
 
 /// A conditional statement.
-class IfStatement implements Statement {
+class IfStatement implements Statement, ScopeCreator {
+  ScopeElement scopeMark;
+  List<Scope> scopes;
+
   Expression condition;
   List<Statement> blockTrue;
   List<Statement> blockFalse;
@@ -68,5 +75,34 @@ class IfStatement implements Statement {
       + drawDepth('false block:', depth + 1)
       + this.blockFalse.map((node) => node?.toString(depth: depth + 2) ?? '').join('')
     );
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.condition.propagateScopeMark(parentMark);
+
+    var scopeTrue = Scope();
+    var scopeFalse = Scope();
+    this.scopes = [scopeTrue, scopeFalse];
+    var bodies = <List<Statement>>[this.blockTrue, this.blockFalse];
+
+    for (var i = 0; i < bodies.length; ++i) {
+      ScopeElement currentMark = this.scopes[i].lastChild;
+      for (var statement in bodies[i]) {
+        statement.propagateScopeMark(currentMark);
+        if (statement is Declaration) {
+          currentMark = this.scopes[i].addDeclaration(statement);
+        }
+        if (statement is ScopeCreator) {
+          (statement as ScopeCreator).scopes.forEach(
+            (subscope) => this.scopes[i].addSubscope(subscope)
+          );
+        }
+      }
+    }
+  }
+
+  void checkSemantics() {
+    // TODO: implement
   }
 }

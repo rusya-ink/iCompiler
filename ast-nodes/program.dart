@@ -3,10 +3,13 @@ import 'declaration.dart';
 import 'variable-declaration.dart';
 import 'type-declaration.dart';
 import 'routine-declaration.dart';
+import 'scope-creator.dart';
 import '../lexer.dart';
 import '../iterator-utils.dart';
 import '../print-utils.dart';
 import '../syntax-error.dart';
+import '../symbol-table/scope.dart';
+import '../symbol-table/scope-element.dart';
 
 /// A program is a list of [Declaration]s.
 ///
@@ -14,7 +17,10 @@ import '../syntax-error.dart';
 ///  - [VariableDeclaration]s
 ///  - [TypeDeclaration]s
 ///  - [RoutineDeclaration]s
-class Program implements Node {
+class Program implements Node, ScopeCreator {
+  ScopeElement scopeMark;
+  List<Scope> scopes;
+
   List<Declaration> declarations;
 
   Program(this.declarations);
@@ -88,5 +94,31 @@ class Program implements Node {
             .declarations
             .map((node) => node?.toString(depth: depth + 2) ?? '')
             .join(''));
+  }
+
+  Scope buildSymbolTable() {
+    this.propagateScopeMark(null);
+    return this.scopes[0];
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    var scope = Scope();
+    this.scopes = [scope];
+    ScopeElement currentMark = scope.lastChild;
+
+    for (var declaration in this.declarations) {
+      declaration.propagateScopeMark(currentMark);
+      currentMark = scope.addDeclaration(declaration);
+
+      if (declaration is ScopeCreator) {
+        (declaration as ScopeCreator).scopes.forEach(
+          (subscope) => scope.addSubscope(subscope)
+        );
+      }
+    }
+  }
+
+  void checkSemantics() {
+    // TODO: implement
   }
 }

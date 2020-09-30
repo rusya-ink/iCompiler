@@ -1,11 +1,16 @@
 import 'var-type.dart';
 import 'expression.dart';
+import 'integer-type.dart';
 import '../print-utils.dart';
 import '../iterator-utils.dart';
 import '../lexer.dart';
+import '../semantic-error.dart';
+import '../symbol-table/scope-element.dart';
 
 /// An array type with optional [size].
 class ArrayType implements VarType {
+  ScopeElement scopeMark;
+
   Expression size;
   VarType elementType;
 
@@ -35,5 +40,22 @@ class ArrayType implements VarType {
       + (this.size?.toString(depth: depth + 1, prefix: 'size: ') ?? '')
       + (this.elementType?.toString(depth: depth + 1, prefix: 'element type: ') ?? '')
     );
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.size?.propagateScopeMark(parentMark);
+    this.elementType.propagateScopeMark(parentMark);
+  }
+
+  void checkSemantics() {
+    this.size.checkSemantics();
+    if (!this.size.isConstant) {
+      throw SemanticError(this.size, 'The array size must be a constant expression');
+    }
+    if (this.size.resultType is! IntegerType) {
+      throw SemanticError(this.size, 'The array size must be integer');
+    }
+    this.elementType.checkSemantics();
   }
 }

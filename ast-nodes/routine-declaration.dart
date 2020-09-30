@@ -2,14 +2,20 @@ import 'declaration.dart';
 import 'parameter.dart';
 import 'var-type.dart';
 import 'statement.dart';
+import 'scope-creator.dart';
 import '../lexer.dart';
 import '../print-utils.dart';
 import '../parser-utils.dart';
 import '../iterator-utils.dart';
 import '../syntax-error.dart';
+import '../symbol-table/scope.dart';
+import '../symbol-table/scope-element.dart';
 
 /// A routine declaration has [parameters], a [returnType] and a [body].
-class RoutineDeclaration extends Declaration {
+class RoutineDeclaration extends Declaration implements ScopeCreator {
+  ScopeElement scopeMark;
+  List<Scope> scopes;
+
   List<Parameter> parameters;
   VarType returnType;
   List<Statement> body;
@@ -76,5 +82,45 @@ class RoutineDeclaration extends Declaration {
       + drawDepth('body:', depth + 1)
       + this.body.map((node) => node?.toString(depth: depth + 2) ?? '').join('')
     );
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    var scope = Scope();
+    this.scopes = [scope];
+    ScopeElement currentMark = scope.lastChild;
+
+    for (var parameter in this.parameters) {
+      parameter.propagateScopeMark(parentMark);
+      currentMark = scope.addDeclaration(parameter.toDeclaration());
+    }
+    this.returnType?.propagateScopeMark(parentMark);
+
+    for (var statement in this.body) {
+      statement.propagateScopeMark(currentMark);
+      if (statement is Declaration) {
+        currentMark = scope.addDeclaration(statement);
+      }
+
+      if (statement is ScopeCreator) {
+        (statement as ScopeCreator).scopes.forEach(
+          (subscope) => scope.addSubscope(subscope)
+        );
+      }
+    }
+  }
+
+  void checkSemantics() {
+    this.scopeMark.ensureNoOther(this.name);
+
+    for (var parameter in this.parameters) {
+      parameter.checkSemantics();
+    }
+
+    this.returnType.checkSemantics();
+
+    for (var statement in this.body) {
+      statement.checkSemantics();
+    }
   }
 }

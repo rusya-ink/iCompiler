@@ -7,6 +7,9 @@ import '../syntax-error.dart';
 
 /// An abstract expression that returns a value.
 abstract class Expression implements Statement {
+  VarType resultType;
+  bool isConstant;
+
   factory Expression.parse(Iterable<Token> tokens) {
     var iterator = tokens.iterator;
     if (!iterator.moveNext()) {

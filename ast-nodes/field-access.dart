@@ -1,5 +1,7 @@
 import 'modifiable-primary.dart';
+import 'var-type.dart';
 import '../print-utils.dart';
+import '../symbol-table/scope-element.dart';
 
 /// A record field access by [name] – for either reading or writing.
 ///
@@ -9,6 +11,10 @@ import '../print-utils.dart';
 /// FieldAccess("c", FieldAccess("b", Variable("a")))
 /// ```
 class FieldAccess implements ModifiablePrimary {
+  VarType resultType;
+  bool isConstant;
+  ScopeElement scopeMark;
+
   String name;
   ModifiablePrimary object;
 
@@ -19,5 +25,14 @@ class FieldAccess implements ModifiablePrimary {
       drawDepth('${prefix}FieldAccess("${this.name}")', depth)
       + (this.object?.toString(depth: depth + 1, prefix: 'object: ') ?? '')
     );
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.object.propagateScopeMark(parentMark);
+  }
+
+  void checkSemantics() {
+    // TODO: implement
   }
 }

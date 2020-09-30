@@ -5,9 +5,12 @@ import '../syntax-error.dart';
 import '../iterator-utils.dart';
 import '../parser-utils.dart';
 import '../print-utils.dart';
+import '../symbol-table/scope-element.dart';
 
 /// A type declaration gives a name to some type [value].
 class TypeDeclaration extends Declaration {
+  ScopeElement scopeMark;
+
   VarType value;
 
   TypeDeclaration(name, this.value) : super(name);
@@ -32,5 +35,14 @@ class TypeDeclaration extends Declaration {
       drawDepth('${prefix}TypeDeclaration("${this.name}")', depth)
       + (this.value?.toString(depth: depth + 1) ?? '')
     );
+  }
+
+  void propagateScopeMark(ScopeElement parentMark) {
+    this.scopeMark = parentMark;
+    this.value.propagateScopeMark(parentMark);
+  }
+
+  void checkSemantics() {
+    // TODO: implement
   }
 }
