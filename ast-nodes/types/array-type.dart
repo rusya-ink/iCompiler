@@ -52,9 +52,13 @@ class ArrayType implements VarType {
           (other.scopeMark.resolve(other.name) as TypeDeclaration).value;
     }
 
-    return (other is ArrayType &&
+    try {
+      return (other is ArrayType &&
         this.size.evaluate() == other.size.evaluate() &&
         this.elementType == other.elementType);
+    } on StateError {
+      return false;
+    }
   }
 
   @override
