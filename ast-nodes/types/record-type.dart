@@ -1,4 +1,6 @@
 import 'var-type.dart';
+import 'named-type.dart';
+import '../type-declaration.dart';
 import '../variable-declaration.dart';
 import '../scope-creator.dart';
 import '../../lexer.dart';
@@ -53,6 +55,34 @@ class RecordType implements VarType, ScopeCreator {
             .fields
             .map((node) => node?.toString(depth: depth + 2) ?? '')
             .join(''));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is NamedType) {
+      return this ==
+          (other.scopeMark.resolve(other.name) as TypeDeclaration).value;
+    }
+
+    if (other is! RecordType) {
+      return false;
+    }
+
+    for (var i = 0; i < this.fields.length; ++i) {
+      var thisField = this.fields[i];
+      var otherField = (other as RecordType).fields[i];
+      if (thisField.name != otherField.name ||
+          thisField.type != otherField.type) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    return 0;
   }
 
   void propagateScopeMark(ScopeElement parentMark) {

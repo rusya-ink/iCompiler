@@ -1,6 +1,8 @@
 import 'var-type.dart';
-import '../expressions/expression.dart';
 import 'integer-type.dart';
+import 'named-type.dart';
+import '../type-declaration.dart';
+import '../expressions/expression.dart';
 import '../../print-utils.dart';
 import '../../iterator-utils.dart';
 import '../../lexer.dart';
@@ -41,6 +43,23 @@ class ArrayType implements VarType {
                 .elementType
                 ?.toString(depth: depth + 1, prefix: 'element type: ') ??
             ''));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is NamedType) {
+      return this ==
+          (other.scopeMark.resolve(other.name) as TypeDeclaration).value;
+    }
+
+    return (other is ArrayType &&
+        this.size.evaluate() == other.size.evaluate() &&
+        this.elementType == other.elementType);
+  }
+
+  @override
+  int get hashCode {
+    return 0;
   }
 
   void propagateScopeMark(ScopeElement parentMark) {
