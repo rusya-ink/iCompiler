@@ -1,4 +1,7 @@
 import 'binary-relation.dart';
+import '../literal.dart';
+import '../real-literal.dart';
+import '../boolean-literal.dart';
 import '../comparison.dart';
 import '../expression.dart';
 import '../../types/boolean-type.dart';
@@ -13,6 +16,18 @@ class GreaterEqOperator extends BinaryRelation implements Comparison {
 
   GreaterEqOperator(Expression leftOperand, Expression rightOperand)
       : super(leftOperand, rightOperand);
+
+  Literal evaluate() {
+    var leftLiteral = this.leftOperand.evaluate();
+    var rightLiteral = this.rightOperand.evaluate();
+
+    if (leftLiteral is RealLiteral || rightLiteral is RealLiteral) {
+      return BooleanLiteral(leftLiteral.realValue >= rightLiteral.realValue);
+    } else {
+      return BooleanLiteral(
+          leftLiteral.integerValue >= rightLiteral.integerValue);
+    }
+  }
 
   void checkSemantics() {
     // TODO: implement

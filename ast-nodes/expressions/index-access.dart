@@ -1,4 +1,5 @@
 import 'modifiable-primary.dart';
+import 'literal.dart';
 import 'expression.dart';
 import '../types/var-type.dart';
 import '../../print-utils.dart';
@@ -31,6 +32,10 @@ class IndexAccess implements ModifiablePrimary {
     return (drawDepth('${prefix}IndexAccess', depth) +
         (this.index?.toString(depth: depth + 1, prefix: 'index: ') ?? '') +
         (this.object?.toString(depth: depth + 1, prefix: 'object: ') ?? ''));
+  }
+
+  Literal evaluate() {
+    throw StateError("Can't evaluate a non-constant expression");
   }
 
   void propagateScopeMark(ScopeElement parentMark) {

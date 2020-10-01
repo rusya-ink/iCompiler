@@ -1,3 +1,4 @@
+import 'literal.dart';
 import 'modifiable-primary.dart';
 import '../types/var-type.dart';
 import '../../print-utils.dart';
@@ -15,6 +16,10 @@ class Variable implements ModifiablePrimary {
 
   String toString({int depth = 0, String prefix = ''}) {
     return drawDepth('${prefix}Variable("${this.name}")', depth);
+  }
+
+  Literal evaluate() {
+    throw StateError("Can't evaluate a non-constant expression");
   }
 
   void propagateScopeMark(ScopeElement parentMark) {

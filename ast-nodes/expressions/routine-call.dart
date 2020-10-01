@@ -1,5 +1,6 @@
 import 'primary.dart';
 import 'expression.dart';
+import 'literal.dart';
 import '../types/var-type.dart';
 import '../../iterator-utils.dart';
 import '../../lexer.dart';
@@ -69,6 +70,10 @@ class RoutineCall implements Primary {
             .arguments
             .map((node) => node?.toString(depth: depth + 2) ?? '')
             .join(''));
+  }
+
+  Literal evaluate() {
+    throw StateError("Can't evaluate a non-constant expression");
   }
 
   void propagateScopeMark(ScopeElement parentMark) {
