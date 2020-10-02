@@ -1,4 +1,6 @@
 import 'binary-relation.dart';
+import '../literal.dart';
+import '../boolean-literal.dart';
 import '../expression.dart';
 import '../../types/boolean-type.dart';
 import '../../types/var-type.dart';
@@ -12,6 +14,12 @@ class XorOperator extends BinaryRelation {
 
   XorOperator(Expression leftOperand, Expression rightOperand)
       : super(leftOperand, rightOperand);
+
+  Literal evaluate() {
+    Literal leftLiteral = this.leftOperand.evaluate();
+    Literal rightLiteral = this.rightOperand.evaluate();
+    return BooleanLiteral(leftLiteral.booleanValue ^ rightLiteral.booleanValue);
+  }
 
   void checkSemantics() {
     // TODO: implement

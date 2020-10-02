@@ -18,6 +18,19 @@ class NamedType implements VarType {
     return drawDepth('${prefix}NamedType("${this.name}")', depth);
   }
 
+  @override
+  bool operator ==(Object other) {
+    return (this.scopeMark.resolve(this.name) as TypeDeclaration).value ==
+        other;
+  }
+
+  @override
+  int get hashCode {
+    return (this.scopeMark.resolve(this.name) as TypeDeclaration)
+        .value
+        .hashCode;
+  }
+
   void propagateScopeMark(ScopeElement parentMark) {
     this.scopeMark = parentMark;
   }

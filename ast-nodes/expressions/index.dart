@@ -12,4 +12,5 @@ export 'index-access.dart';
 export 'variable.dart';
 export 'modifiable-primary.dart';
 export 'prioritized.dart';
+export 'literal.dart';
 export 'operators/index.dart';

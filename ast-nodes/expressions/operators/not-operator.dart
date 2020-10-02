@@ -1,4 +1,6 @@
 import 'unary-relation.dart';
+import '../literal.dart';
+import '../boolean-literal.dart';
 import '../expression.dart';
 import '../../types/boolean-type.dart';
 import '../../types/var-type.dart';
@@ -11,6 +13,10 @@ class NotOperator extends UnaryRelation {
   bool isConstant;
 
   NotOperator(Expression operand) : super(operand);
+
+  Literal evaluate() {
+    return BooleanLiteral(!this.operand.evaluate().booleanValue);
+  }
 
   void checkSemantics() {
     // TODO: implement

@@ -1,10 +1,11 @@
-import '../statement.dart';
 import 'comparison.dart';
-import '../types/var-type.dart';
+import 'literal.dart';
 import 'operators/not-operator.dart';
 import 'operators/and-operator.dart';
 import 'operators/or-operator.dart';
 import 'operators/xor-operator.dart';
+import '../statement.dart';
+import '../types/var-type.dart';
 import '../../lexer.dart';
 import '../../iterator-utils.dart';
 import '../../syntax-error.dart';
@@ -49,4 +50,9 @@ abstract class Expression implements Statement {
       }
     }
   }
+
+  /// Return a literal that is equal to the result of this expression.
+  ///
+  /// Should throw [StateError] for non-constant expressions.
+  Literal evaluate();
 }

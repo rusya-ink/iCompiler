@@ -1,5 +1,6 @@
 import 'product.dart';
 import 'expression.dart';
+import 'literal.dart';
 import '../types/var-type.dart';
 import '../../lexer.dart';
 import '../../iterator-utils.dart';
@@ -31,6 +32,10 @@ class Prioritized implements Product {
   String toString({int depth = 0, String prefix = ''}) {
     return (drawDepth('${prefix}Prioritized', depth) +
         (this.operand?.toString(depth: depth + 1) ?? ''));
+  }
+
+  Literal evaluate() {
+    return this.operand.evaluate();
   }
 
   void propagateScopeMark(ScopeElement parentMark) {
