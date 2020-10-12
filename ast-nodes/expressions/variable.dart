@@ -36,7 +36,6 @@ class Variable implements ModifiablePrimary {
   }
 
   Pointer<LLVMOpaqueValue> generateCode(Module module) {
-    // TODO: implement
-    return null;
+    return module.getNamedGlobal(MemoryManager.getCString(this.name));
   }
 }
