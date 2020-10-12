@@ -79,7 +79,26 @@ class VariableDeclaration extends Declaration {
   }
 
   Pointer<LLVMOpaqueValue> generateCode(Module module) {
-    // TODO: implement
+    if (this.type is IntegerType) {
+      this.opaqueValue = llvm.LLVMBuildAlloca(
+          module.builder,
+          llvm.LLVMInt32TypeInContext(module.context),
+          MemoryManager.getCString(this.name));
+    } else if (this.type is RealType) {
+      this.opaqueValue = llvm.LLVMBuildAlloca(
+          module.builder,
+          llvm.LLVMDoubleTypeInContext(module.context),
+          MemoryManager.getCString(this.name));
+    } else if (this.type is BooleanType) {
+      this.opaqueValue = llvm.LLVMBuildAlloca(
+          module.builder,
+          llvm.LLVMInt1TypeInContext(module.context),
+          MemoryManager.getCString(this.name));
+    }
+    if (this.value != null) {
+      llvm.LLVMBuildStore(
+          module.builder, this.value.generateCode(module), this.opaqueValue);
+    }
     return null;
   }
 }
