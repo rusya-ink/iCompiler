@@ -14,8 +14,9 @@ class ForLoop implements Statement, ScopeCreator {
   Variable loopVariable;
   Range range;
   List<Statement> body;
+  bool isReversed;
 
-  ForLoop(this.loopVariable, this.range, this.body);
+  ForLoop(this.loopVariable, this.range, this.body, this.isReversed);
 
   factory ForLoop.parse(Iterable<Token> tokens) {
     var iterator = tokens.iterator;
@@ -28,6 +29,11 @@ class ForLoop implements Statement, ScopeCreator {
     var loopVariable = Variable(iterator.current.value);
     checkNext(iterator, RegExp('in\$'), "Expected 'in'");
     iterator.moveNext();
+    var isReversed = false;
+    if (iterator.current.value == 'reverse') {
+      isReversed = true;
+      iterator.moveNext();
+    }
     var range = Range.parse(consumeUntil(iterator, RegExp('loop\$')));
     checkThis(iterator, RegExp('loop\$'), "Expected 'loop'");
     iterator.moveNext();
@@ -46,7 +52,7 @@ class ForLoop implements Statement, ScopeCreator {
           iterator.current, 'Expected at least one statement in a loop body');
     }
 
-    return ForLoop(loopVariable, range, statements);
+    return ForLoop(loopVariable, range, statements, isReversed);
   }
 
   String toString({int depth = 0, String prefix = ''}) {
