@@ -145,6 +145,11 @@ class RoutineDeclaration extends Declaration implements ScopeCreator {
       )
     );
 
+    for (var i = 0; i < this.parameters.length; i++) {
+      parameters[i].scopeMark.resolve(parameters[i].name).opaqueValue =
+          llvm.LLVMGetParam(module.getLastRoutine(), i);
+    }
+
     for (var statement in this.body) {
       statement.generateCode(module);
     }
