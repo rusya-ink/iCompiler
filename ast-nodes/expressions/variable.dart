@@ -36,6 +36,6 @@ class Variable implements ModifiablePrimary {
   }
 
   Pointer<LLVMOpaqueValue> generateCode(Module module) {
-    return module.getNamedGlobal(MemoryManager.getCString(this.name));
+    return scopeMark.resolve(name).opaqueValue;
   }
 }
