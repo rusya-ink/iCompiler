@@ -59,7 +59,10 @@ class BooleanLiteral implements Literal {
   void checkSemantics() {}
 
   Pointer<LLVMOpaqueValue> generateCode(Module module) {
-    // TODO: implement
-    return null;
+    return llvm.LLVMConstInt(
+      this.resultType.getLlvmType(module),
+      this.value ? 1 : 0,
+      0,
+    );
   }
 }

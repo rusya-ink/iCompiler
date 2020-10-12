@@ -1,0 +1,27 @@
+routine main1(): real is
+  return false;
+end
+
+routine main2(): real is
+  return true;
+end
+
+routine main3(): integer is
+  return true;
+end
+
+routine main4(): integer is
+  return 3.6;
+end
+
+routine main5(): real is
+  return 3;
+end
+
+routine main6(): real is
+  return true;
+end
+
+routine main7(): real is
+  return false;
+end
