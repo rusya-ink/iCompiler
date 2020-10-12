@@ -47,7 +47,13 @@ class ReturnStatement implements Statement {
   }
 
   Pointer<LLVMOpaqueValue> generateCode(Module module) {
-    // TODO: implement
-    return null;
+    var block = llvm.LLVMAppendBasicBlock(module.currentRoutine, MemoryManager.getCString('return'));
+    llvm.LLVMPositionBuilderAtEnd(module.builder, block);
+
+    if (this.value == null) {
+      return llvm.LLVMBuildRetVoid(module.builder);
+    } else {
+      return llvm.LLVMBuildRet(module.builder, this.value.generateCode(module));
+    }
   }
 }

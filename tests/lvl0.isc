@@ -1,0 +1,3 @@
+routine main(): integer is
+  return 42;
+end

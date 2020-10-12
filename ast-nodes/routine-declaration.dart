@@ -138,15 +138,20 @@ class RoutineDeclaration extends Declaration implements ScopeCreator {
     var routine = module.addRoutine(
       this.name,
       llvm.LLVMFunctionType(
-        this.returnType.getLlvmType(module),
+        this.returnType?.getLlvmType(module) ?? llvm.LLVMVoidTypeInContext(module.context),
         paramTypes,
         this.parameters.length,
         0,
       )
     );
 
-    // iterate over statements and add basic blocks
+    module.currentRoutine = routine;
 
+    for (var statement in this.body) {
+      statement.generateCode(module);
+    }
+
+    module.currentRoutine = null;
     return routine;
   }
 }

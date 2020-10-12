@@ -69,7 +69,10 @@ class IntegerLiteral implements Literal {
   void checkSemantics() {}
 
   Pointer<LLVMOpaqueValue> generateCode(Module module) {
-    // TODO: implement
-    return null;
+    return llvm.LLVMConstInt(
+      llvm.LLVMInt32TypeInContext(module.context),
+      this.value,
+      1,  // SignExtend: true
+    );
   }
 }
