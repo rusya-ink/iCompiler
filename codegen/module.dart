@@ -28,10 +28,6 @@ class Module {
     return llvm.LLVMGetLastFunction(this._module);
   }
 
-  Pointer<LLVMOpaqueValue> getNamedGlobal(name) {
-    return llvm.LLVMGetNamedGlobal(this._module, name);
-  }
-
   /// Get the string representation of the module.
   ///
   /// This includes metadata like the name as well as the instruction dump.

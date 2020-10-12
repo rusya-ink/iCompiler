@@ -47,6 +47,6 @@ class Parameter implements Node {
   }
 
   Pointer<LLVMOpaqueValue> generateCode(Module module) {
-    return scopeMark.resolve(name).valueRef;
+    return null;
   }
 }
