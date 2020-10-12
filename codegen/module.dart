@@ -9,6 +9,7 @@ final llvm = LLVM(DynamicLibrary.open('/usr/lib/libLLVM-10.so'));
 class Module {
   Pointer<LLVMOpaqueContext> context;
   Pointer<LLVMOpaqueModule> _module;
+  Pointer<LLVMOpaqueValue> currentRoutine;
 
   Module(String name) {
     this.context = llvm.LLVMContextCreate();
