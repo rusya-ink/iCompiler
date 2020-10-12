@@ -70,7 +70,7 @@ class IntegerLiteral implements Literal {
 
   Pointer<LLVMOpaqueValue> generateCode(Module module) {
     return llvm.LLVMConstInt(
-      llvm.LLVMInt32TypeInContext(module.context),
+      this.resultType.getLlvmType(module),
       this.value,
       1,  // SignExtend: true
     );

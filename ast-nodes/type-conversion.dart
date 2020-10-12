@@ -35,7 +35,44 @@ class TypeConversion implements Expression {
   }
 
   Pointer<LLVMOpaqueValue> generateCode(Module module) {
-    // TODO: implement
-    return null;
+    // TODO: fix rounding when converting 3.6 to real
+    var srcType = this.expression.resultType.resolve();
+    var dstType = this.resultType;
+
+    if (dstType is RealType) {
+      if (srcType is IntegerType) {
+        return llvm.LLVMBuildSIToFP(
+          module.builder,
+          this.expression.generateCode(module),
+          this.resultType.getLlvmType(module),
+          MemoryManager.getCString('integer->real'),
+        );
+      }
+      if (srcType is BooleanType) {
+        return llvm.LLVMBuildUIToFP(
+          module.builder,
+          this.expression.generateCode(module),
+          this.resultType.getLlvmType(module),
+          MemoryManager.getCString('boolean->real'),
+        );
+      }
+      return null;
+    }
+
+    if (srcType is RealType && dstType is IntegerType) {
+      return llvm.LLVMBuildFPToSI(
+        module.builder,
+        this.expression.generateCode(module),
+        this.resultType.getLlvmType(module),
+        MemoryManager.getCString('real->integer'),
+      );
+    }
+
+    return llvm.LLVMBuildBitCast(
+      module.builder,
+      this.expression.generateCode(module),
+      this.resultType.getLlvmType(module),
+      MemoryManager.getCString('type-conversion'),
+    );
   }
 }

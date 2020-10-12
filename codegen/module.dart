@@ -10,7 +10,6 @@ class Module {
   Pointer<LLVMOpaqueContext> context;
   Pointer<LLVMOpaqueBuilder> builder;
   Pointer<LLVMOpaqueModule> _module;
-  Pointer<LLVMOpaqueValue> currentRoutine;
 
   Module(String name) {
     this.context = llvm.LLVMContextCreate();
@@ -23,6 +22,10 @@ class Module {
 
   Pointer<LLVMOpaqueValue> addRoutine(String name, Pointer<LLVMOpaqueType> type) {
     return llvm.LLVMAddFunction(this._module, MemoryManager.getCString(name), type);
+  }
+
+  Pointer<LLVMOpaqueValue> getLastRoutine() {
+    return llvm.LLVMGetLastFunction(this._module);
   }
 
   /// Get the string representation of the module.

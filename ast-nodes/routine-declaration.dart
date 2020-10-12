@@ -145,13 +145,10 @@ class RoutineDeclaration extends Declaration implements ScopeCreator {
       )
     );
 
-    module.currentRoutine = routine;
-
     for (var statement in this.body) {
       statement.generateCode(module);
     }
 
-    module.currentRoutine = null;
     return routine;
   }
 }

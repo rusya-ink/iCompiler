@@ -69,7 +69,9 @@ class RealLiteral implements Literal {
   void checkSemantics() {}
 
   Pointer<LLVMOpaqueValue> generateCode(Module module) {
-    // TODO: implement
-    return null;
+    return llvm.LLVMConstReal(
+      this.resultType.getLlvmType(module),
+      this.value,
+    );
   }
 }
