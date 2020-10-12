@@ -112,10 +112,77 @@ class IfStatement implements Statement, ScopeCreator {
     for (var statement in this.blockFalse) {
       statement.checkSemantics();
     }
+    if (condition.isConstant) {
+      print("const");
+    }
   }
 
   Pointer<LLVMOpaqueValue> generateCode(Module module) {
-    // TODO: implement
-    return null;
+
+    Pointer<LLVMOpaqueValue> conditionValue = condition.generateCode(module);
+    if (conditionValue==null) {
+      return null;
+    }
+
+    Pointer<LLVMOpaqueValue> ifCond = llvm.LLVMConstFCmp(
+      LLVMRealPredicate.LLVMRealONE,
+      conditionValue,
+      llvm.LLVMConstReal(
+        RealType().getLlvmType(module),
+        0.0
+      )
+    );
+
+    var currentRoutine = module.getLastRoutine();
+
+    var ifBlock = llvm.LLVMAppendBasicBlockInContext(
+      module.context, 
+      currentRoutine, 
+      MemoryManager.getCString('if')
+    );
+
+    var thenBlock = llvm.LLVMCreateBasicBlockInContext(
+      module.context, 
+      MemoryManager.getCString('then')
+    );
+
+    var elseBlock = llvm.LLVMCreateBasicBlockInContext(
+      module.context, 
+      MemoryManager.getCString('else')
+    );
+
+    var endBlock = llvm.LLVMCreateBasicBlockInContext(
+      module.context, 
+      MemoryManager.getCString('end')
+    );
+
+    llvm.LLVMPositionBuilderAtEnd(module.builder, entryBlock);
+
+    llvm.LLVMBuildCondBr(
+      module.builder,
+      ifCond,
+      thenBlock,
+      elseBlock
+    );
+
+    llvm.LLVMAppendExistingBasicBlock(currentRoutine, thenBlock);
+    for (var statement in this.blockTrue) {
+      statement.generateCode(module);
+    }
+    llvm.LLVMBuildBr(module.builder, endBlock);
+    thenBlock = llvm.LLVMGetInsertBlock(module.builder);
+
+    llvm.LLVMAppendExistingBasicBlock(currentRoutine, elseBlock);
+    llvm.LLVMPositionBuilderAtEnd(module.builder, elseBlock);
+    for (var statement in this.blockFalse) {
+      statement.generateCode(module);
+    }
+    llvm.LLVMBuildBr(module.builder, endBlock);
+    elseBlock = llvm.LLVMGetInsertBlock(module.builder);
+
+    llvm.LLVMAppendExistingBasicBlock(currentRoutine, endBlock);
+    llvm.LLVMPositionBuilderAtEnd(module.builder, endBlock);
+
+    return currentRoutine;
   }
 }
