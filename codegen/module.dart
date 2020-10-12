@@ -8,6 +8,7 @@ final llvm = LLVM(DynamicLibrary.open('/usr/lib/libLLVM-10.so'));
 /// A wrapper around the LLVM Module for easier use.
 class Module {
   Pointer<LLVMOpaqueContext> context;
+  Pointer<LLVMOpaqueBuilder> builder;
   Pointer<LLVMOpaqueModule> _module;
   Pointer<LLVMOpaqueValue> currentRoutine;
 
@@ -17,6 +18,7 @@ class Module {
       MemoryManager.getCString(name),
       this.context,
     );
+    this.builder = llvm.LLVMCreateBuilderInContext(this.context);
   }
 
   Pointer<LLVMOpaqueValue> addRoutine(String name, Pointer<LLVMOpaqueType> type) {
@@ -36,6 +38,7 @@ class Module {
   /// Free the memory occupied by this module.
   void dispose() {
     llvm.LLVMDisposeModule(this._module);
+    llvm.LLVMDisposeBuilder(this.builder);
     llvm.LLVMContextDispose(this.context);
   }
 }
