@@ -52,9 +52,13 @@ class ReturnStatement implements Statement {
     llvm.LLVMPositionBuilderAtEnd(builder, block);
 
     if (this.value == null) {
-      return llvm.LLVMBuildRetVoid(builder);
+      var code = llvm.LLVMBuildRetVoid(builder);
+      llvm.LLVMDisposeBuilder(builder);
+      return code;
     } else {
-      return llvm.LLVMBuildRet(builder, this.value.generateCode(module));
+      var code = llvm.LLVMBuildRet(builder, this.value.generateCode(module));
+      llvm.LLVMDisposeBuilder(builder);
+      return code;
     }
   }
 }
